@@ -326,10 +326,7 @@ body {
   text-transform: uppercase; letter-spacing: 1.1px; color: var(--muted); padding: 10px 16px 0;
 }
 .content-card-label span.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink:0; }
-.theme-img-frame { width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: var(--off-white); margin-top: 8px; }
-.theme-img-frame img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
-.prompt-img-frame { width: 100%; aspect-ratio: 1748 / 1240; overflow: hidden; background: var(--off-white); margin-top: 8px; }
-.prompt-img-frame img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
+/* Image frames removed - text only */
 .content-info { padding: 14px 16px 16px; border-top: 1px solid var(--border); }
 .content-week-pill {
   display: inline-block; margin-bottom: 8px;
@@ -341,9 +338,7 @@ body {
 }
 .content-title { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.15; margin-bottom: 6px; }
 .content-msg { font-size: 13px; color: var(--muted); line-height: 1.65; white-space: pre-line; margin-bottom: 0; }
-.img-placeholder-box { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, var(--slate) 0%, var(--off-white) 100%); }
-.ph-icon { font-size: 42px; }
-.ph-text { font-size: 13px; color: var(--muted); text-align: center; padding: 0 20px; }
+/* Placeholder boxes removed */
 .section { padding: 12px 12px 0; }
 .actions-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .act-btn {
@@ -534,22 +529,7 @@ body {
 @media(max-width:640px) { .form-row { grid-template-columns:1fr; } .admin-sidebar { display:none; } .stats-row { padding:10px 12px; gap:8px; } .section { padding:12px; } }
 @media(min-width:641px) { .bottom-nav { display:none; } }
 
-/* Survey */
-#screen-survey { background: linear-gradient(150deg, var(--navy-deep) 0%, var(--navy) 100%); overflow-y: auto; align-items: center; padding: 24px 20px 40px; }
-.survey-wrap { width: 100%; max-width: 540px; animation: fadeDown 0.5s ease both; }
-.survey-hd { background: var(--white); border-radius: 20px 20px 0 0; padding: 24px 28px 16px; border-bottom: 3px solid var(--gold); }
-.survey-hd h2 { font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:var(--navy); text-transform:uppercase; letter-spacing:0.5px; }
-.survey-hd p { font-size:13px; color:var(--muted); margin-top:4px; line-height:1.5; }
-.survey-body { background:var(--white); padding:20px 28px 8px; }
-.survey-section-title { font-family:'Oswald',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gold-dim); border-left:3px solid var(--gold); padding-left:10px; margin:20px 0 14px; }
-.survey-q { margin-bottom:16px; }
-.survey-q-label { font-size:13px; font-weight:600; color:var(--navy); margin-bottom:8px; display:block; }
-.survey-radio-group { display:flex; flex-direction:column; gap:6px; }
-.survey-radio-opt { display:flex; align-items:center; gap:10px; padding:9px 12px; border:1.5px solid var(--slate); border-radius:10px; cursor:pointer; font-size:13px; color:var(--text); transition:all 0.15s; }
-.survey-radio-opt:hover { border-color:var(--navy); background:var(--off-white); }
-.survey-radio-opt input[type=radio] { accent-color:var(--navy); width:16px; height:16px; flex-shrink:0; }
-.survey-footer { background:var(--white); padding:16px 28px 28px; border-radius:0 0 20px 20px; }
-.survey-progress-text { font-size:11px; color:var(--muted); text-align:center; margin-top:10px; }
+/* Survey screen removed */
 .opt-row { display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center; margin-bottom:8px; }
 .correct-check-label { display:flex; align-items:center; gap:4px; font-size:12px; font-weight:600; color:var(--navy); cursor:pointer; white-space:nowrap; }
 .pts-mini { width:60px; }
@@ -565,6 +545,75 @@ body {
 .config-banner h3 { font-family:'Oswald',sans-serif; font-size:18px; color:var(--gold-light); margin-bottom:8px; text-transform:uppercase; }
 .config-banner p { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.7; }
 .config-banner code { font-family:'Courier New',monospace; background:rgba(212,160,23,0.15); padding:2px 6px; border-radius:4px; color:var(--gold-light); font-size:12px; }
+
+/* ── TASK FLOW STEPPER ── */
+.task-flow-steps {
+  display: flex; align-items: center; gap: 0;
+  padding: 14px 16px 0; margin-bottom: 4px;
+}
+.flow-step {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; flex: 1;
+}
+.flow-step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+  background: var(--slate); color: var(--muted);
+  border: 2px solid var(--border); transition: all 0.3s;
+}
+.flow-step.done .flow-step-circle { background: #D1FAE5; border-color: #059669; color: #065F46; }
+.flow-step.active .flow-step-circle { background: var(--navy); border-color: var(--navy); color: var(--white); }
+.flow-step-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); text-align: center; }
+.flow-step.done .flow-step-label { color: #059669; }
+.flow-step.active .flow-step-label { color: var(--navy); }
+.flow-connector { height: 2px; flex: 1; background: var(--border); margin-bottom: 18px; transition: background 0.3s; }
+.flow-connector.done { background: #059669; }
+
+/* ── POLL INSIGHT CARD (on dashboard) ── */
+.insight-section { padding: 12px 12px 0; }
+.insight-card {
+  background: var(--white); border-radius: 16px;
+  border: 1.5px solid var(--border); box-shadow: var(--shadow);
+  overflow: hidden; margin-bottom: 12px;
+}
+.insight-header {
+  background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid));
+  padding: 12px 16px; display: flex; align-items: center; gap: 8px;
+}
+.insight-header h4 {
+  font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--white); text-transform: uppercase; letter-spacing: 0.8px; margin: 0;
+}
+.insight-body { padding: 14px 16px; }
+.insight-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 12px; margin-bottom: 8px;
+  border: 1.5px solid var(--border);
+}
+.insight-item:last-child { margin-bottom: 0; }
+.insight-item.positive { border-color: #6EE7B7; background: #F0FDF9; }
+.insight-item.neutral  { border-color: #93C5FD; background: #EFF6FF; }
+.insight-item.needs-improvement { border-color: #FCD34D; background: #FFFBEB; }
+.insight-emoji { font-size: 22px; flex-shrink: 0; }
+.insight-info { flex: 1; }
+.insight-task-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+.insight-response  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.insight-badge {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; padding: 3px 9px; border-radius: 20px;
+}
+.insight-badge.positive { background: #D1FAE5; color: #065F46; }
+.insight-badge.neutral  { background: #DBEAFE; color: #1E40AF; }
+.insight-badge.needs-improvement { background: #FEF3C7; color: #92400E; }
+
+/* ── TASK COMPLETE LOCKED STATES ── */
+.step-locked-msg {
+  background: var(--off-white); border: 1.5px dashed var(--border);
+  border-radius: 12px; padding: 14px 16px; text-align: center;
+  font-size: 13px; color: var(--muted); margin: 12px 12px 0;
+}
+
 </style>
 </head>
 <body>
@@ -626,7 +675,7 @@ body {
             <select class="form-select" id="p-batch"><option value="">Choose your batch…</option></select>
           </div>
           <div class="form-group"><label class="form-label">Create Password</label><input type="password" class="form-input" id="p-pass" placeholder="Min 6 characters"></div>
-          <button class="btn-primary btn-gold" onclick="goToSurvey()">Next: Pre-Engagement Survey ›</button>
+          <button class="btn-primary btn-gold" onclick="goToSurvey()" id="btn-register">Create Account ›</button>
           <div class="auth-switch">Already joined? <a onclick="showPLogin()">Sign In</a></div>
         </div>
 
@@ -664,27 +713,8 @@ body {
   </div>
 </div>
 
-<!-- SURVEY -->
-<div id="screen-survey" class="screen">
-  <div class="survey-wrap">
-    <div class="survey-hd">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div class="b4c-mini-logo"><img src="bridge4change-logo.png" class="auth-logo-img" alt="B4C" onerror="this.style.display='none'"></div>
-        <div>
-          <h2>Pre-Engagement Survey</h2>
-          <p>Yes! I Am Mindful Campaign · Your responses are confidential</p>
-        </div>
-      </div>
-    </div>
-    <div class="survey-body" id="survey-body"></div>
-    <div class="survey-footer">
-      <button class="btn-primary btn-gold" onclick="submitSurvey()">Submit & Begin Journey ›</button>
-      <p class="survey-progress-text">All responses are kept strictly confidential</p>
-    </div>
-  </div>
-</div>
 
-<!-- PARTICIPANT -->
+<!-- PARTICIPANT APP -->
 <div id="screen-participant" class="screen">
   <div class="app-header">
     <div class="header-brand">
@@ -717,39 +747,62 @@ body {
         <div class="stat-tile"><div class="stat-val" id="p-streak">0</div><div class="stat-lbl">Streak 🔥</div></div>
         <div class="stat-tile"><div class="stat-val" id="p-badge">🌱</div><div class="stat-lbl">Badge</div></div>
       </div>
+
+      <!-- WEEKLY THEME - text only -->
       <div class="content-card">
         <div class="content-card-label"><span class="dot"></span> Weekly Theme</div>
-        <div class="theme-img-frame" id="p-theme-img-wrap">
-          <div class="img-placeholder-box"><div class="ph-icon">⛰️</div><div class="ph-text">Weekly theme image will appear here</div></div>
-        </div>
         <div class="content-info">
           <div class="content-week-pill" id="p-week-badge-label">Week 1</div>
           <div class="content-title" id="p-theme-title">Starting with Self</div>
           <div class="content-msg" id="p-theme-msg"></div>
         </div>
       </div>
-      <div class="content-card" style="margin-bottom:12px;">
+
+      <!-- TODAY'S TASK with step-by-step flow -->
+      <div class="content-card" style="margin-bottom:12px;" id="task-card">
         <div class="content-card-label"><span class="dot"></span> Today's Mindful Action</div>
-        <div class="prompt-img-frame" id="p-task-img-wrap">
-          <div class="img-placeholder-box"><div class="ph-icon">🃏</div><div class="ph-text">Task prompt image will appear here</div></div>
+
+        <!-- FLOW STEPPER -->
+        <div class="task-flow-steps" id="task-stepper">
+          <div class="flow-step active" id="step-resource">
+            <div class="flow-step-circle">📚</div>
+            <div class="flow-step-label">Resource</div>
+          </div>
+          <div class="flow-connector" id="conn-1"></div>
+          <div class="flow-step" id="step-quiz">
+            <div class="flow-step-circle">🧠</div>
+            <div class="flow-step-label">Quiz</div>
+          </div>
+          <div class="flow-connector" id="conn-2"></div>
+          <div class="flow-step" id="step-poll">
+            <div class="flow-step-circle">📊</div>
+            <div class="flow-step-label">Poll</div>
+          </div>
+          <div class="flow-connector" id="conn-3"></div>
+          <div class="flow-step" id="step-done">
+            <div class="flow-step-circle">✅</div>
+            <div class="flow-step-label">Done</div>
+          </div>
         </div>
+
         <div class="content-info">
           <div class="content-week-pill" id="p-task-week-badge">W1 · Task 1</div>
           <div class="content-title" id="p-task-title">Loading…</div>
           <div class="content-msg" id="p-task-desc">Loading task details…</div>
-          <div class="actions-grid" style="margin-top:14px;">
-            <button class="act-btn outline" onclick="toggleResource()">📚 Resource</button>
-            <button class="act-btn outline" onclick="openPoll()">📊 Poll</button>
-            <button class="act-btn navy" onclick="openQuiz()">🧠 Take Quiz</button>
-            <button class="act-btn gold" id="btn-complete" onclick="markComplete()">✅ Mark Done</button>
+          <div style="margin-top:14px;" id="task-action-area">
+            <button class="act-btn full navy" id="btn-next-step" onclick="updateTaskFlow()">📚 Read Resource First</button>
           </div>
         </div>
       </div>
-      <div class="section" style="padding-top:0;">
-        <div class="resource-card" id="resource-panel">
-          <div class="resource-title" id="res-title">Resource</div>
-          <div class="resource-msg" id="res-msg"></div>
-          <a id="res-link" href="#" target="_blank" class="resource-link-btn">🎥 Open Resource ↗</a>
+
+      <!-- POLL INSIGHTS ON DASHBOARD -->
+      <div class="insight-section" id="insights-section" style="display:none;">
+        <div class="insight-card">
+          <div class="insight-header">
+            <span>💡</span>
+            <h4>Your Mindfulness Insights</h4>
+          </div>
+          <div class="insight-body" id="insights-body"></div>
         </div>
       </div>
     </div>
@@ -780,6 +833,7 @@ body {
     <button class="bn-btn" onclick="showPView('profile',this)"><div class="bn-icon">👤</div><span>Profile</span></button>
   </div>
 </div>
+
 
 <!-- ADMIN -->
 <div id="screen-admin" class="screen">
@@ -835,7 +889,7 @@ body {
               <tbody>
                 <tr><td><strong>participants</strong></td><td>Every registered user — name, email, points, tasks done, streak</td><td>Firestore → participants → click any document</td></tr>
                 <tr><td><strong>participants/{uid}/completions</strong></td><td>Each task, quiz, poll completed by a participant (sub-collection)</td><td>Firestore → participants → click a user → completions</td></tr>
-                <tr><td><strong>surveys</strong></td><td>Full pre-engagement survey answers for every participant</td><td>Firestore → surveys OR use "Export Survey CSV" in Survey Builder</td></tr>
+                <tr><td><strong>pollResponses</strong></td><td>Each participant's poll answer + mindfulness category (positive/neutral/needs-improvement) stored in completions sub-collection</td><td>Firestore → participants → {uid} → completions → poll_{taskNum}</td></tr>
                 <tr><td><strong>batches</strong></td><td>Your program batches — name, active week, active task</td><td>Firestore → batches</td></tr>
                 <tr><td><strong>tasks</strong></td><td>All 40 task details — title, message, image URL, points, status</td><td>Firestore → tasks</td></tr>
                 <tr><td><strong>themes</strong></td><td>Weekly theme titles and messages (weeks 1–8)</td><td>Firestore → themes</td></tr>
@@ -919,7 +973,7 @@ body {
 
         <!-- THEMES -->
         <div id="panel-themes" class="a-panel">
-          <div class="panel-hd"><h2>Weekly Themes</h2><p>Set weekly themes — paste a public image URL for photos</p></div>
+          <div class="panel-hd"><h2>Weekly Themes</h2><p>Set weekly theme titles and messages — text only</p></div>
           <div class="a-card">
             <h3>Edit Weekly Theme</h3>
             <div class="form-row">
@@ -931,11 +985,7 @@ body {
               </div>
               <div class="form-group"><label class="form-label">Theme Title</label><input type="text" class="form-input" id="t-title" placeholder="e.g. Healthy Lifestyle"></div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Theme Image URL <span style="color:var(--muted);font-weight:500;">(Paste a public image link from Google Drive, Imgur, etc.)</span></label>
-              <input type="url" class="form-input" id="t-img-url" placeholder="https://drive.google.com/uc?id=… or https://i.imgur.com/…">
-              <p style="font-size:11px;color:var(--muted);margin-top:6px;">To use Google Drive: right-click image → "Get link" → set to Anyone with link → copy URL and change /view to /uc?export=view in the URL.</p>
-            </div>
+<!-- Image URL removed - text only -->
             <div class="form-group"><label class="form-label">Theme Message</label><textarea class="form-textarea" id="t-msg" placeholder="Week theme message for participants…"></textarea></div>
             <button class="btn-save" onclick="saveTheme()">Save Theme to Firebase</button>
           </div>
@@ -944,7 +994,7 @@ body {
 
         <!-- TASKS -->
         <div id="panel-tasks" class="a-panel">
-          <div class="panel-hd"><h2>Tasks</h2><p>Add and manage all 40 tasks — paste image URLs from Google Drive or Imgur</p></div>
+          <div class="panel-hd"><h2>Tasks</h2><p>Add and manage all 40 tasks — include resource text for the step-by-step flow</p></div>
           <div class="a-card">
             <h3>Add / Edit Task</h3>
             <div class="form-row">
@@ -957,11 +1007,7 @@ body {
               </div>
             </div>
             <div class="form-group"><label class="form-label">Prompt Name (Task Title)</label><input type="text" class="form-input" id="tk-name" placeholder="e.g. One Hour for Self Everyday"></div>
-            <div class="form-group">
-              <label class="form-label">Task Image URL <span style="color:var(--muted);font-weight:500;">(Paste a public image link)</span></label>
-              <input type="url" class="form-input" id="tk-img-url" placeholder="https://drive.google.com/uc?id=… or https://i.imgur.com/…">
-              <p style="font-size:11px;color:var(--muted);margin-top:6px;">Paste any public image URL. Google Drive: change /view to /uc?export=view in the shared link.</p>
-            </div>
+<!-- Image URL removed - text only -->
             <div class="form-group"><label class="form-label">Daily Prompt Message</label><textarea class="form-textarea" id="tk-msg" placeholder="Task description and instructions…"></textarea></div>
             <div class="form-group"><label class="form-label">Resource Title</label><input type="text" class="form-input" id="tk-res-title" placeholder="e.g. Importance of daily exercise"></div>
             <div class="form-group"><label class="form-label">Resource Message (include links in text)</label><textarea class="form-textarea" id="tk-res-msg" placeholder="Full resource message with YouTube or website links…"></textarea></div>
@@ -999,7 +1045,7 @@ body {
 
         <!-- POLLS -->
         <div id="panel-polls" class="a-panel">
-          <div class="panel-hd"><h2>Poll Questions</h2><p>Set individual points per poll option</p></div>
+          <div class="panel-hd"><h2>Poll Questions</h2><p>Define poll options, points, and mindfulness categories (Positive / Neutral / Needs Improvement) — visible in participant insights</p></div>
           <div class="a-card">
             <h3>Add / Edit Poll</h3>
             <div class="form-group"><label class="form-label">Task Number</label><input type="number" class="form-input" id="poll-task" min="1" max="40" placeholder="e.g. 25" onchange="loadPoll()"></div>
@@ -1008,11 +1054,39 @@ body {
               <h4>Poll Options & Points</h4>
               <div class="multi-answer-note">💡 Assign different points to each option to reflect effort level.</div>
               <div style="margin-top:12px;">
-                <div class="opt-row"><input type="text" class="form-input" id="poll-a" placeholder="Option 1 (e.g. Yes ✅)"><span style="font-size:12px;color:var(--muted);white-space:nowrap;">Points</span><input type="number" class="form-input pts-mini" id="poll-a-pts" value="3" min="0"></div>
-                <div class="opt-row"><input type="text" class="form-input" id="poll-b" placeholder="Option 2"><span style="font-size:12px;color:var(--muted);white-space:nowrap;">Points</span><input type="number" class="form-input pts-mini" id="poll-b-pts" value="3" min="0"></div>
-                <div class="opt-row"><input type="text" class="form-input" id="poll-c" placeholder="Option 3 (optional)"><span style="font-size:12px;color:var(--muted);white-space:nowrap;">Points</span><input type="number" class="form-input pts-mini" id="poll-c-pts" value="2" min="0"></div>
-                <div class="opt-row"><input type="text" class="form-input" id="poll-d" placeholder="Option 4 (optional)"><span style="font-size:12px;color:var(--muted);white-space:nowrap;">Points</span><input type="number" class="form-input pts-mini" id="poll-d-pts" value="1" min="0"></div>
-                <div class="opt-row"><input type="text" class="form-input" id="poll-e" placeholder="Option 5 (optional)"><span style="font-size:12px;color:var(--muted);white-space:nowrap;">Points</span><input type="number" class="form-input pts-mini" id="poll-e-pts" value="0" min="0"></div>
+                <div style="display:grid;grid-template-columns:1fr 70px 120px;gap:8px;align-items:center;margin-bottom:4px;padding:0 2px;">
+                  <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;">Option Text</span>
+                  <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;">Points</span>
+                  <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;">Category</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 70px 120px;gap:8px;margin-bottom:8px;align-items:center;">
+                  <input type="text" class="form-input" id="poll-a" placeholder="Option 1 (e.g. Yes, I did it!)">
+                  <input type="number" class="form-input" id="poll-a-pts" value="3" min="0">
+                  <select class="form-select" id="poll-a-cat"><option value="positive">🌟 Positive</option><option value="neutral">💙 Neutral</option><option value="needs-improvement">🌱 Needs Work</option></select>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 70px 120px;gap:8px;margin-bottom:8px;align-items:center;">
+                  <input type="text" class="form-input" id="poll-b" placeholder="Option 2">
+                  <input type="number" class="form-input" id="poll-b-pts" value="2" min="0">
+                  <select class="form-select" id="poll-b-cat"><option value="positive">🌟 Positive</option><option value="neutral" selected>💙 Neutral</option><option value="needs-improvement">🌱 Needs Work</option></select>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 70px 120px;gap:8px;margin-bottom:8px;align-items:center;">
+                  <input type="text" class="form-input" id="poll-c" placeholder="Option 3 (optional)">
+                  <input type="number" class="form-input" id="poll-c-pts" value="1" min="0">
+                  <select class="form-select" id="poll-c-cat"><option value="positive">🌟 Positive</option><option value="neutral">💙 Neutral</option><option value="needs-improvement" selected>🌱 Needs Work</option></select>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 70px 120px;gap:8px;margin-bottom:8px;align-items:center;">
+                  <input type="text" class="form-input" id="poll-d" placeholder="Option 4 (optional)">
+                  <input type="number" class="form-input" id="poll-d-pts" value="0" min="0">
+                  <select class="form-select" id="poll-d-cat"><option value="positive">🌟 Positive</option><option value="neutral">💙 Neutral</option><option value="needs-improvement" selected>🌱 Needs Work</option></select>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 70px 120px;gap:8px;margin-bottom:8px;align-items:center;">
+                  <input type="text" class="form-input" id="poll-e" placeholder="Option 5 (optional)">
+                  <input type="number" class="form-input" id="poll-e-pts" value="0" min="0">
+                  <select class="form-select" id="poll-e-cat"><option value="positive">🌟 Positive</option><option value="neutral">💙 Neutral</option><option value="needs-improvement" selected>🌱 Needs Work</option></select>
+                </div>
+                <div style="background:var(--gold-pale);border-radius:10px;padding:10px 14px;margin-top:4px;font-size:12px;color:#7A6020;line-height:1.6;">
+                  💡 <strong>Categories</strong>: Select a category for each option. This determines how the response appears in the participant's Mindfulness Insights dashboard — <strong>🌟 Positive</strong>, <strong>💙 Neutral</strong>, or <strong>🌱 Needs Improvement</strong>.
+                </div>
               </div>
             </div>
             <button class="btn-save" style="margin-top:16px;" onclick="savePoll()">Save Poll</button>
@@ -1100,12 +1174,29 @@ body {
             <button class="btn-save" onclick="saveSettings()">Save Settings</button>
           </div>
           <div class="a-card" style="border-color:var(--gold);background:var(--gold-pale);">
-            <h3 style="color:var(--gold-dim)">📸 About Images</h3>
-            <p style="font-size:14px;color:#7A6020;line-height:1.7;">Paste public image URLs in the Themes and Tasks sections. You can use <strong>Google Drive</strong> (share → Anyone with link → change /view to /uc?export=view) or <strong>Imgur</strong> (free image hosting at imgur.com). When you upgrade to Firebase Blaze plan, direct upload will be re-enabled.</p>
+            <h3 style="color:var(--gold-dim)">📝 Text-Only Mode</h3>
+            <p style="font-size:14px;color:#7A6020;line-height:1.7;">This portal runs in text-only mode — no image uploads required. All task content, resources, quiz, and poll data is stored as text in Firestore. This keeps the app fully functional on the free Firebase Spark plan.</p>
           </div>
         </div>
 
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCE MODAL -->
+<div id="resource-modal" class="modal-bg">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <h3 id="res-modal-title">Resource</h3>
+      <p>Read this before taking the quiz</p>
+    </div>
+    <div class="modal-body">
+      <div id="res-modal-msg" style="font-size:14px;color:var(--text);line-height:1.8;white-space:pre-line;margin-bottom:16px;"></div>
+      <a id="res-modal-link" href="#" target="_blank" class="resource-link-btn" style="display:none;margin-bottom:16px;">🎥 Open Resource ↗</a>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-submit" onclick="markResourceDone()">✅ Done Reading — Next: Quiz →</button>
     </div>
   </div>
 </div>
@@ -1418,127 +1509,6 @@ async function adminGoogleLogin() {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// SURVEY
-// ─────────────────────────────────────────────────────────────
-const SURVEY_QUESTIONS = [
-  {type:'section', label:'Frequency Based Questions'},
-  {id:'q1',  label:'How often are you able to sleep for 7-9 hours?', opts:['Daily','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q2',  label:'How often do you use a cell phone just before going to bed and immediately after waking up?', opts:['Daily or more than once a day','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q3',  label:'How often do you meditate in a week?', opts:['Daily or more than once a day','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q4',  label:'How often do you go for a morning walk in a week?', opts:['Daily','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q5',  label:'How often do you take stairs instead of lifts or elevators?', opts:['Daily or more than once a day','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q6',  label:'How often do you carry a cloth bag whenever you go out shopping?', opts:['Everytime','Often','Sometime','Rarely','Never']},
-  {id:'q7',  label:'How often do you carry your own water bottle when going out?', opts:['Everytime','Often','Sometime','Rarely','Never']},
-  {id:'q8',  label:'How often do you repair broken items instead of buying new ones?', opts:['Everytime','Often','Sometime','Rarely','Never']},
-  {id:'q9',  label:'How often do you eat an early dinner (last meal) around 7:30pm?', opts:['Daily','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q10', label:'How often do you consume non-veg meals in a week?', opts:['Daily or more than once a day','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often']},
-  {id:'q11', label:'How often do you bathe using a tap instead of a shower?', opts:['Daily or more than once a day','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q12', label:'How often do you use tissue paper?', opts:['Everytime','Often','Sometime','Rarely','Never']},
-  {id:'q13', label:'How often do you usually read a book before going to sleep?', opts:['Daily or more than once a day','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {id:'q14', label:'How often do you donate your old clothes or books?', opts:['More than 4 times','3-4 times','1-2 times','Rarely','Never']},
-  {id:'q15', label:'How often do you opt for a train or bus to travel long distances?', opts:['Everytime','Often','Sometime','Rarely','Never']},
-  {id:'q16', label:'Before buying something, how often do you think about whether you really need it?', opts:['Everytime','Often','Sometime','Rarely','Never']},
-  {id:'q17', label:'Are you conscious about switching off unused devices during the day?', opts:['Everytime','Often','Sometime','Rarely','Never']},
-  {id:'q18', label:'How often do you prefer to purchase locally grown fruits and vegetables?', opts:['Daily or more than once a day','Very often (4-5 days a week)','Often (2-3 days a week)','Sometimes (1 day a week)','Less often or Never']},
-  {type:'section', label:'Lifestyle Based Questions'},
-  {id:'q19', label:'What type of meals do you generally prefer?', opts:['Vegan','Vegetarian','Eggetarian','Non-Vegetarian']},
-  {id:'q20', label:'How many litres of water do you usually drink in a day?', opts:['More than 3 litres','2–3 litres','1–2 litres','Less than 1 litre']},
-  {id:'q21', label:'Do you practice gardening?', opts:['Yes','No','Not Applicable']},
-  {id:'q22', label:'Do you grow medicinal plants (tulsi, aloe vera, mint, etc.)?', opts:['Yes','No','Not Applicable']},
-  {id:'q23', label:'Do you segregate your waste?', opts:['Yes','No']},
-  {id:'q24', label:'Do you practice composting at home?', opts:['Yes','No','Not Applicable']},
-  {id:'q25', label:'How do you cut plastic-packed items?', opts:['Make a small cut and leave the plastic attached','Cut from the side','Tear it open from the center']},
-  {id:'q26', label:'If you notice a leaking tap, how quickly do you fix it?', opts:['Immediately','1-2 days','2-3 days','More than 3 days','Rarely or Never']},
-  {id:'q27', label:'Do you reuse wastewater from a water filter (RO)?', opts:['Yes','No','Not Applicable']},
-  {id:'q28', label:'Do you keep your tap running while brushing your teeth?', opts:['Yes','No']},
-  {id:'q29', label:'Do you volunteer or support social causes?', opts:['Yes','No']},
-  {id:'q30', label:'Do you often express gratitude to anyone?', opts:['Yes','No']},
-  {id:'q31', label:'Do you actively remain present while interacting with someone?', opts:['Yes','No']},
-  {id:'q32', label:'Which mode of transport do you use for daily commuting?', opts:['Public transport','Carpooling','Own Vehicle','Taxi (Uber, Ola etc.)','Other (walking, cycling)']},
-  {id:'q33', label:'At what temperature do you usually set the AC?', opts:["I don't use AC","20°C or below","21–23°C","24–26°C","Above 26°C"]},
-  {id:'q34', label:'What is your average leisure screen time during weekdays?', opts:['More than 6 hours','4–6 hours','2-4 hours','1–2 hours','Less than 1 hour']},
-  {id:'q35', label:'Do you prefer the digital version of a document over hard copy?', opts:['Yes','No']},
-];
-
-function buildSurveyHTML(customQuestions) {
-  const questions = customQuestions || SURVEY_QUESTIONS;
-  let h = '';
-  questions.forEach(q => {
-    if (q.type === 'section') { h += `<div class="survey-section-title">${q.label}</div>`; return; }
-    h += `<div class="survey-q"><span class="survey-q-label">${q.label}</span><div class="survey-radio-group">${q.opts.map(opt => `<label class="survey-radio-opt"><input type="radio" name="${q.id}" value="${opt}"> ${opt}</label>`).join('')}</div></div>`;
-  });
-  return h;
-}
-
-function goToSurvey() {
-  const name = _v('p-name'), email = _v('p-email'), batchId = _v('p-batch');
-  const pass = _v('p-pass');
-  if (!name || !email || !batchId) { toast('⚠️ Please fill name, email and select a batch'); return; }
-  if (!pass || pass.length < 6) { toast('⚠️ Password must be at least 6 characters'); return; }
-  window._tmpSignup = { name, email, mobile: _v('p-mobile'), institution: _v('p-inst'), batchId, pass };
-  // Try to load custom questions from Firestore, fall back to defaults
-  loadSurveyForSignup().then(customQuestions => {
-    document.getElementById('survey-body').innerHTML = buildSurveyHTML(customQuestions || null);
-  });
-  showScreen('survey');
-}
-
-async function submitSurvey() {
-  const answers = {};
-  let unanswered = 0;
-  // Collect all radio questions dynamically (works with both default and custom questions)
-  const allNames = new Set([...document.querySelectorAll('#survey-body input[type="radio"]')].map(i => i.name));
-  allNames.forEach(qid => {
-    const sel = document.querySelector(`input[name="${qid}"]:checked`);
-    if (sel) answers[qid] = sel.value;
-    else unanswered++;
-  });
-  if (unanswered > 5) { toast(`⚠️ Please answer at least ${35 - 5} questions`); return; }
-
-  const tmp = window._tmpSignup || {};
-
-  // Create Firebase Auth account with email + password
-  let uid;
-  try {
-    const cred = await auth.createUserWithEmailAndPassword(tmp.email, tmp.pass);
-    uid = cred.user.uid;
-    S.fbUser = cred.user;
-  } catch(e) {
-    if (e.code === 'auth/email-already-in-use') {
-      toast('⚠️ Email already registered. Please sign in instead.');
-      showPLogin();
-    } else {
-      toast('❌ ' + (e.message || 'Registration failed'));
-    }
-    return;
-  }
-
-  // Save participant doc
-  await db.collection('participants').doc(uid).set({
-    uid, name: tmp.name, email: tmp.email,
-    mobile: tmp.mobile || '', institution: tmp.institution || '',
-    batchId: tmp.batchId, points: 0, tasksCompleted: 0,
-    streak: 0, lastActive: FieldValue.serverTimestamp(),
-    signupDate: FieldValue.serverTimestamp(),
-    surveyCompleted: true, role: 'participant'
-  });
-
-  // Save survey separately
-  await db.collection('surveys').doc(uid).set({
-    uid, name: tmp.name, email: tmp.email, batchId: tmp.batchId,
-    submittedAt: FieldValue.serverTimestamp(),
-    answers
-  });
-
-  S.user = { uid, name: tmp.name, email: tmp.email, mobile: tmp.mobile, institution: tmp.institution, batchId: tmp.batchId, points: 0, tasksCompleted: 0, streak: 0 };
-  await loadCampaignData(tmp.batchId);
-  hideLoading();
-  await loadPDash();
-  showScreen('participant');
-  subscribeToConfig(tmp.batchId);
-  toast('🌱 Welcome ' + tmp.name + '! Survey saved.');
-}
 
 // ─────────────────────────────────────────────────────────────
 // PARTICIPANT DASHBOARD
@@ -1572,7 +1542,6 @@ async function loadPDash() {
   document.getElementById('p-week-badge-label').textContent = 'Week ' + aw;
   document.getElementById('p-theme-title').textContent = theme ? theme.title : 'Mindfulness Week';
   document.getElementById('p-theme-msg').textContent   = theme && theme.message ? theme.message : '';
-  const tiw = document.getElementById('p-theme-img-wrap');
   if (theme && theme.imageUrl) {
     tiw.className = 'theme-img-frame';
     tiw.innerHTML = `<img src="${theme.imageUrl}" alt="${theme.title||'Theme'}" style="width:100%;height:100%;object-fit:contain;display:block;" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder-box\\'><div class=\\'ph-icon\\'>⛰️</div></div>'">`;
@@ -1594,19 +1563,19 @@ async function loadPDash() {
     document.getElementById('p-task-week-badge').textContent = `W${aw} · Task ${at}`;
     document.getElementById('p-task-title').textContent      = task.name || 'Mindful Action';
     document.getElementById('p-task-desc').textContent       = task.message || '';
-    const tiw2 = document.getElementById('p-task-img-wrap');
-    if (task.imageUrl) {
-      tiw2.className = 'prompt-img-frame';
-      tiw2.innerHTML = `<img src="${task.imageUrl}" alt="${task.name||'Task'}" style="width:100%;height:100%;object-fit:contain;display:block;">`;
-    } else {
-      tiw2.className = 'prompt-img-frame';
-      tiw2.innerHTML = '<div class=\'img-placeholder-box\'><div class=\'ph-icon\'>🃏</div><div class=\'ph-text\'>Task prompt image will appear here</div></div>';
-    }
-    // Check if already completed
-    const compDoc = await db.collection('participants').doc(S.fbUser.uid).collection('completions').doc(String(at)).get();
-    const bc = document.getElementById('btn-complete');
-    if (compDoc.exists) { bc.className = 'act-btn done full'; bc.textContent = '✅ Already Completed'; }
-    else                { bc.className = 'act-btn gold';      bc.textContent = '✅ Mark Done'; }
+    // Load completion states for this task
+    const uid = S.fbUser.uid;
+    const [resDoc, quizDoc, pollDoc, taskDoc] = await Promise.all([
+      db.collection('participants').doc(uid).collection('completions').doc('resource_'+at).get(),
+      db.collection('participants').doc(uid).collection('completions').doc('quiz_'+at).get(),
+      db.collection('participants').doc(uid).collection('completions').doc('poll_'+at).get(),
+      db.collection('participants').doc(uid).collection('completions').doc(String(at)).get()
+    ]);
+    S.taskState = { at, task,
+      ressDone: resDoc.exists, quizDone: quizDoc.exists,
+      pollDone: pollDoc.exists, taskDone: taskDoc.exists
+    };
+    updateTaskFlow();
   } else {
     document.getElementById('p-task-title').textContent = 'No task available';
     document.getElementById('p-task-desc').textContent  = 'Your coordinator will unlock the next task soon.';
@@ -1624,6 +1593,77 @@ async function loadPDash() {
   document.getElementById('prof-badges').innerHTML = bDefs.map(b => `<div class="badge-chip ${(pu.tasksCompleted||0)>=b.t?'earned':''}">${b.ico} ${b.lbl}</div>`).join('');
 
   renderPLB(pu.batchId);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// TASK FLOW — manages stepper visuals and single action button
+// Flow: Resource → Quiz → Poll → Mark Complete
+// ─────────────────────────────────────────────────────────────
+function updateTaskFlow() {
+  const state = S.taskState;
+  if (!state) return;
+  const { ressDone, quizDone, pollDone, taskDone, task, at } = state;
+  const area = document.getElementById('task-action-area');
+  if (!area) return;
+
+  // Update stepper visuals
+  const setStep = (id, cls) => { const el = document.getElementById(id); if (el) el.className = 'flow-step ' + cls; };
+  const setConn = (id, done) => { const el = document.getElementById(id); if (el) el.className = 'flow-connector' + (done ? ' done' : ''); };
+
+  setStep('step-resource', taskDone||ressDone ? 'done' : 'active');
+  setStep('step-quiz',     taskDone||quizDone ? 'done' : (ressDone ? 'active' : ''));
+  setStep('step-poll',     taskDone||pollDone ? 'done' : (quizDone ? 'active' : ''));
+  setStep('step-done',     taskDone           ? 'done' : (pollDone ? 'active' : ''));
+  setConn('conn-1', ressDone || taskDone);
+  setConn('conn-2', quizDone || taskDone);
+  setConn('conn-3', pollDone || taskDone);
+
+  const hasResource = task && task.resourceMessage;
+  const hasQuiz     = S.quizzes && (S.quizzes[String(at)] || S.quizzes[at]);
+  const hasPoll     = S.polls   && (S.polls[String(at)]   || S.polls[at]);
+
+  if (taskDone) {
+    area.innerHTML = '<button class="act-btn done full" style="cursor:default;">✅ Task Completed — Great work!</button>';
+    return;
+  }
+
+  if (!ressDone) {
+    if (!hasResource) {
+      // Auto-complete resource step
+      S.taskState.ressDone = true;
+      db.collection('participants').doc(S.fbUser.uid).collection('completions')
+        .doc('resource_'+at).set({ taskNum: at, action:'RESOURCE_AUTO', completedAt: FieldValue.serverTimestamp() });
+      updateTaskFlow(); return;
+    }
+    area.innerHTML = '<button class="act-btn full navy" onclick="openResource()">📚 Step 1: Read Resource First</button>';
+    return;
+  }
+
+  if (!quizDone) {
+    if (!hasQuiz) {
+      S.taskState.quizDone = true;
+      db.collection('participants').doc(S.fbUser.uid).collection('completions')
+        .doc('quiz_'+at).set({ taskNum: at, action:'QUIZ_SKIPPED', pointsAwarded: 0, completedAt: FieldValue.serverTimestamp() });
+      updateTaskFlow(); return;
+    }
+    area.innerHTML = '<button class="act-btn full navy" onclick="openQuiz()">🧠 Step 2: Take the Quiz</button>';
+    return;
+  }
+
+  if (!pollDone) {
+    if (!hasPoll) {
+      S.taskState.pollDone = true;
+      db.collection('participants').doc(S.fbUser.uid).collection('completions')
+        .doc('poll_'+at).set({ taskNum: at, taskName: (task&&task.name)||'Task '+at, action:'POLL_SKIPPED', response: '', category: 'neutral', pointsAwarded: 0, completedAt: FieldValue.serverTimestamp() });
+      updateTaskFlow(); return;
+    }
+    area.innerHTML = '<button class="act-btn full gold" onclick="openPoll()">📊 Step 3: Answer the Poll</button>';
+    return;
+  }
+
+  // All steps done — show complete button
+  area.innerHTML = '<button class="act-btn full gold" onclick="markComplete()">✅ Step 4: Mark Task Complete</button>';
 }
 
 async function renderPLB(batchId) {
@@ -1664,6 +1704,12 @@ async function markComplete() {
   const batch = S.batches[S.user.batchId] || {};
   const at    = batch.activeTask || 1;
   const pts   = S.settings.pC || 10;
+  const state = S.taskState || {};
+
+  // Guard: must have completed resource, quiz, poll first
+  if (!state.ressDone) { toast('⚠️ Please read the resource first'); return; }
+  if (!state.quizDone) { toast('⚠️ Please complete the quiz first'); return; }
+  if (!state.pollDone) { toast('⚠️ Please answer the poll first'); return; }
 
   const completionRef  = db.collection('participants').doc(uid).collection('completions').doc(String(at));
   const participantRef = db.collection('participants').doc(uid);
@@ -1683,28 +1729,43 @@ async function markComplete() {
     S.user.points         = (S.user.points || 0) + pts;
     S.user.tasksCompleted = (S.user.tasksCompleted || 0) + 1;
     S.user.streak         = (S.user.streak || 0) + 1;
+    if (S.taskState) S.taskState.taskDone = true;
+    updateTaskFlow();
     await loadPDash();
     toast('🎉 Task completed! +' + pts + ' points!');
   } catch(e) {
-    if (e.message === 'Already completed') toast('✅ Already marked done!');
+    if (e.message === 'Already completed') { toast('✅ Already marked done!'); }
     else { toast('❌ Error saving. Try again.'); console.error(e); }
   }
 }
 
 // ─────────────────────────────────────────────────────────────
-// RESOURCE
+// RESOURCE — opens modal, marks as done when closed
 // ─────────────────────────────────────────────────────────────
-function toggleResource() {
+async function openResource() {
   const at   = (S.batches[S.user.batchId] || {}).activeTask || 1;
   const task = S.tasks[String(at)] || S.tasks[at];
-  const panel = document.getElementById('resource-panel');
   if (!task || !task.resourceMessage) { toast('📚 No resource added for this task yet'); return; }
-  document.getElementById('res-title').textContent = task.resourceTitle || 'Resource';
-  document.getElementById('res-msg').textContent   = task.resourceMessage;
+  document.getElementById('res-modal-title').textContent = task.resourceTitle || 'Resource';
+  document.getElementById('res-modal-msg').textContent   = task.resourceMessage;
   const urlM = task.resourceMessage.match(/https?:\/\/[^\s]+/);
-  const lb   = document.getElementById('res-link');
+  const lb   = document.getElementById('res-modal-link');
   if (urlM) { lb.href = urlM[0]; lb.style.display = 'inline-flex'; } else lb.style.display = 'none';
-  panel.classList.toggle('open');
+  document.getElementById('resource-modal').classList.add('open');
+}
+
+async function markResourceDone() {
+  const at  = (S.batches[S.user.batchId] || {}).activeTask || 1;
+  const uid = S.fbUser.uid;
+  const ref = db.collection('participants').doc(uid).collection('completions').doc('resource_'+at);
+  const existing = await ref.get();
+  if (!existing.exists) {
+    await ref.set({ taskNum: at, action:'RESOURCE', completedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  }
+  if (S.taskState) S.taskState.ressDone = true;
+  closeModal('resource-modal');
+  updateTaskFlow();
+  toast('📚 Resource read! Now take the quiz.');
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -1738,6 +1799,7 @@ async function openQuiz() {
   });
   document.getElementById('quiz-result').style.display  = 'none';
   document.getElementById('quiz-submit').style.display  = 'block';
+  document.getElementById('quiz-submit').textContent   = 'Submit Answer';
   document.getElementById('quiz-modal').classList.add('open');
 }
 
@@ -1767,6 +1829,16 @@ async function submitQuiz() {
     S.user.points = (S.user.points || 0) + earnedPts;
     document.getElementById('p-pts').textContent = S.user.points;
   }
+  // Always mark quiz as done (even if wrong answer - they attempted it)
+  if (!earnedPts) {
+    const uid2 = S.fbUser.uid;
+    await db.collection('participants').doc(uid2).collection('completions').doc('quiz_'+at).set({ taskNum: at, action:'QUIZ', pointsAwarded: 0, completedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  }
+  if (S.taskState) S.taskState.quizDone = true;
+  // Show "Next: Poll" button in modal footer
+  document.getElementById('quiz-submit').style.display = 'none';
+  const closeBtn = document.querySelector('#quiz-modal .btn-modal-close');
+  if (closeBtn) { closeBtn.textContent = '📊 Next: Answer Poll →'; closeBtn.onclick = () => { closeModal('quiz-modal'); openPoll(); }; }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -1800,13 +1872,33 @@ async function submitPoll() {
   const l    = sel.dataset.letter;
   const optPts = poll.optionPoints || poll.optPts || { a:3, b:3, c:2, d:1, e:0 };
   const earned = optPts[l] !== undefined ? optPts[l] : (S.settings.pP || 3);
-  const uid    = S.fbUser.uid;
-  await db.collection('participants').doc(uid).collection('completions').doc('poll_'+at).set({ taskNum: at, action:'POLL', response: sel.textContent.trim(), pointsAwarded: earned, completedAt: FieldValue.serverTimestamp() });
+  // Determine category from poll option category mapping
+  const optCat = poll.optionCategories || {};
+  let category = optCat[l] || 'neutral';
+  // Auto-categorize if no admin mapping: high pts = positive, mid = neutral, low = needs-improvement
+  if (!optCat[l]) {
+    const maxPts = Math.max(...Object.values(optPts).filter(v => v !== undefined));
+    if (earned >= maxPts * 0.75) category = 'positive';
+    else if (earned >= maxPts * 0.4) category = 'neutral';
+    else category = 'needs-improvement';
+  }
+
+  const uid = S.fbUser.uid;
+  const task = S.tasks[String(at)] || S.tasks[at] || {};
+  await db.collection('participants').doc(uid).collection('completions').doc('poll_'+at).set({
+    taskNum: at, taskName: task.name || ('Task ' + at),
+    action:'POLL', response: sel.textContent.replace(/^[A-Z]\s+/, '').trim(),
+    responseKey: l, category, pointsAwarded: earned,
+    completedAt: FieldValue.serverTimestamp()
+  });
   await db.collection('participants').doc(uid).update({ points: FieldValue.increment(earned), lastActive: FieldValue.serverTimestamp() });
   S.user.points = (S.user.points || 0) + earned;
+  if (S.taskState) S.taskState.pollDone = true;
   closeModal('poll-modal');
   document.getElementById('p-pts').textContent = S.user.points;
-  toast('📊 Response recorded! +' + earned + ' points');
+  toast('📊 Response recorded! +' + earned + ' pts. Now mark the task complete!');
+  updateTaskFlow();
+  loadInsights();
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -1940,27 +2032,25 @@ function renderParticipants() {
 function loadTheme() {
   const w = document.getElementById('t-week').value;
   const t = S.themes[w] || S.themes[String(w)] || {};
-  document.getElementById('t-title').value   = t.title || '';
-  document.getElementById('t-msg').value     = t.message || '';
-  document.getElementById('t-img-url').value = t.imageUrl || '';
+  document.getElementById('t-title').value = t.title || '';
+  document.getElementById('t-msg').value   = t.message || '';
 }
 
 async function saveTheme() {
-  const w        = document.getElementById('t-week').value;
-  const title    = _v('t-title');
-  const message  = _v('t-msg');
-  const imageUrl = _v('t-img-url');
-  const data = { week: parseInt(w), title, message, imageUrl, updatedAt: FieldValue.serverTimestamp() };
+  const w       = document.getElementById('t-week').value;
+  const title   = _v('t-title');
+  const message = _v('t-msg');
+  const data = { week: parseInt(w), title, message, updatedAt: FieldValue.serverTimestamp() };
   await db.collection('themes').doc(String(w)).set(data);
   S.themes[String(w)] = data;
   renderThemesPreview(); toast('✅ Week ' + w + ' theme saved!');
 }
 
 function renderThemesPreview() {
-  document.getElementById('themes-preview').innerHTML = Object.entries(S.themes).map(([w, t]) => `
+  document.getElementById('themes-preview').innerHTML = Object.entries(S.themes).sort((a,b)=>parseInt(a[0])-parseInt(b[0])).map(([w, t]) => `
     <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);">
-      ${t.imageUrl ? `<img src="${t.imageUrl}" style="width:48px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : `<div style="width:48px;height:36px;border-radius:6px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:18px;flex-shrink:0;">⛰️</div>`}
-      <div><strong>Week ${w}: ${t.title||'—'}</strong><div style="font-size:12px;color:var(--muted);margin-top:2px;">${(t.message||'').slice(0,55)}…</div></div>
+      <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--navy),var(--navy-light));display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-family:Oswald,sans-serif;font-size:13px;font-weight:700;flex-shrink:0;">W${w}</div>
+      <div><strong>Week ${w}: ${t.title||'—'}</strong><div style="font-size:12px;color:var(--muted);margin-top:2px;">${(t.message||'').slice(0,80)}${(t.message||'').length > 80 ? '…' : ''}</div></div>
     </div>`).join('') || '<p style="color:var(--muted);font-size:14px;">No themes saved yet.</p>';
 }
 
@@ -1970,23 +2060,21 @@ function renderThemesPreview() {
 async function loadTask() {
   const num = document.getElementById('tk-num').value;
   const t   = S.tasks[String(num)] || {};
-  document.getElementById('tk-week').value        = t.week || 1;
-  document.getElementById('tk-name').value        = t.name || '';
-  document.getElementById('tk-msg').value         = t.message || '';
-  document.getElementById('tk-img-url').value     = t.imageUrl || '';
-  document.getElementById('tk-res-title').value   = t.resourceTitle || '';
-  document.getElementById('tk-res-msg').value     = t.resourceMessage || '';
-  document.getElementById('tk-points').value      = t.points || 10;
-  document.getElementById('tk-status').value      = t.status || 'locked';
+  document.getElementById('tk-week').value      = t.week || 1;
+  document.getElementById('tk-name').value      = t.name || '';
+  document.getElementById('tk-msg').value       = t.message || '';
+  document.getElementById('tk-res-title').value = t.resourceTitle || '';
+  document.getElementById('tk-res-msg').value   = t.resourceMessage || '';
+  document.getElementById('tk-points').value    = t.points || 10;
+  document.getElementById('tk-status').value    = t.status || 'locked';
 }
 
 async function saveTask() {
   const num = parseInt(document.getElementById('tk-num').value);
   if (!num || num < 1 || num > 40) { toast('⚠️ Task number must be 1–40'); return; }
-  const imageUrl = _v('tk-img-url');
   const data = {
     num, week: parseInt(document.getElementById('tk-week').value),
-    name: _v('tk-name'), message: _v('tk-msg'), imageUrl,
+    name: _v('tk-name'), message: _v('tk-msg'),
     resourceTitle: _v('tk-res-title'), resourceMessage: _v('tk-res-msg'),
     points: parseInt(document.getElementById('tk-points').value) || 10,
     status: document.getElementById('tk-status').value,
@@ -2003,8 +2091,7 @@ function renderTaskList() {
     const t = S.tasks[k], locked = t.status === 'locked';
     return `<div class="task-row">
       <div class="task-num-badge">${t.num||k}</div>
-      ${t.imageUrl ? `<img src="${t.imageUrl}" style="width:44px;height:36px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : ''}
-      <div class="task-row-info"><h4>${t.name||'Untitled'}</h4><p>Week ${t.week||'?'} · ${t.points||10} pts</p></div>
+      <div class="task-row-info"><h4>${t.name||'Untitled'}</h4><p>Week ${t.week||'?'} · ${t.points||10} pts · ${t.resourceMessage ? '📚 Has Resource' : 'No resource'}</p></div>
       <button class="lock-btn ${locked?'locked':'active'}" onclick="toggleTaskLock('${k}')">${locked?'🔒 Locked':'🔓 Active'}</button>
     </div>`;
   }).join('') || '<p style="color:var(--muted);font-size:14px;">No tasks yet.</p>';
@@ -2060,10 +2147,13 @@ function loadPoll() {
   const num = document.getElementById('poll-task').value;
   const p   = S.polls[String(num)] || {};
   document.getElementById('poll-q').value = p.question || p.q || '';
-  const op = p.optionPoints || p.optPts || { a:3, b:3, c:2, d:1, e:0 };
+  const op  = p.optionPoints || p.optPts || { a:3, b:2, c:1, d:0, e:0 };
+  const cat = p.optionCategories || { a:'positive', b:'neutral', c:'needs-improvement', d:'needs-improvement', e:'needs-improvement' };
   ['a','b','c','d','e'].forEach(l => {
     document.getElementById('poll-'+l).value     = p['option_'+l] || p[l] || '';
-    document.getElementById('poll-'+l+'-pts').value = op[l] !== undefined ? op[l] : 3;
+    document.getElementById('poll-'+l+'-pts').value = op[l] !== undefined ? op[l] : 0;
+    const catEl = document.getElementById('poll-'+l+'-cat');
+    if (catEl) catEl.value = cat[l] || 'neutral';
   });
 }
 
@@ -2071,18 +2161,21 @@ async function savePoll() {
   const num = parseInt(document.getElementById('poll-task').value);
   if (!num) { toast('⚠️ Enter task number'); return; }
   const optionPoints = {};
+  const optionCategories = {};
   ['a','b','c','d','e'].forEach(l => {
     optionPoints[l] = parseInt(document.getElementById('poll-'+l+'-pts').value) || 0;
+    const catEl = document.getElementById('poll-'+l+'-cat');
+    optionCategories[l] = catEl ? catEl.value : 'neutral';
   });
   const data = {
     taskNum: num, question: _v('poll-q'),
     option_a: _v('poll-a'), option_b: _v('poll-b'), option_c: _v('poll-c'),
     option_d: _v('poll-d'), option_e: _v('poll-e'),
-    optionPoints, updatedAt: FieldValue.serverTimestamp()
+    optionPoints, optionCategories, updatedAt: FieldValue.serverTimestamp()
   };
   await db.collection('polls').doc(String(num)).set(data);
   S.polls[String(num)] = data;
-  toast('✅ Poll for Task ' + num + ' saved!');
+  toast('✅ Poll for Task ' + num + ' saved! (with categories)');
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -2260,6 +2353,42 @@ async function loadSurveyForSignup() {
   return null; // Use built-in defaults
 }
 
+
+// ─────────────────────────────────────────────────────────────
+// INSIGHTS — load poll responses + categorize for dashboard
+// ─────────────────────────────────────────────────────────────
+async function loadInsights() {
+  const uid = S.fbUser ? S.fbUser.uid : null;
+  if (!uid) return;
+  try {
+    const snap = await db.collection('participants').doc(uid).collection('completions')
+      .where('action', '==', 'POLL').orderBy('completedAt', 'desc').limit(20).get();
+    const section = document.getElementById('insights-section');
+    const body    = document.getElementById('insights-body');
+    if (snap.empty) { section.style.display = 'none'; return; }
+
+    const catEmoji = { positive: '🌟', neutral: '💙', 'needs-improvement': '🌱' };
+    const catLabel = { positive: 'Positive', neutral: 'Neutral', 'needs-improvement': 'Needs Improvement' };
+
+    let html = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const cat = d.category || 'neutral';
+      const taskLabel = d.taskName || ('Task ' + d.taskNum);
+      html += `<div class="insight-item ${cat}">
+        <div class="insight-emoji">${catEmoji[cat] || '💙'}</div>
+        <div class="insight-info">
+          <div class="insight-task-name">${taskLabel}</div>
+          <div class="insight-response">"${d.response || ''}"</div>
+        </div>
+        <div class="insight-badge ${cat}">${catLabel[cat] || cat}</div>
+      </div>`;
+    });
+
+    body.innerHTML = html;
+    section.style.display = 'block';
+  } catch(e) { console.warn('Insights load failed:', e); }
+}
 // ─────────────────────────────────────────────────────────────
 // EXPORT CSV
 // ─────────────────────────────────────────────────────────────
