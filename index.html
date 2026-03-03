@@ -12,7 +12,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <style>
 /* ═══════════════════════════════
@@ -239,17 +238,7 @@ body {
 }
 .back-link:hover { color:var(--gold-light); }
 
-/* Magic link sent state */
-.magic-sent-box {
-  text-align:center; padding:20px 0;
-}
-.magic-sent-icon { font-size:52px; margin-bottom:12px; }
-.magic-sent-title {
-  font-family:'Oswald',sans-serif; font-size:22px; font-weight:700;
-  color:var(--navy); text-transform:uppercase; margin-bottom:8px;
-}
-.magic-sent-text { font-size:14px; color:var(--muted); line-height:1.7; }
-.magic-sent-email { font-weight:700; color:var(--navy); }
+/* Password login - no magic link CSS needed */
 
 /* ═══════════════════════════════
    APP HEADER (shared)
@@ -636,25 +625,27 @@ body {
             <label class="form-label">Select Batch</label>
             <select class="form-select" id="p-batch"><option value="">Choose your batch…</option></select>
           </div>
+          <div class="form-group"><label class="form-label">Create Password</label><input type="password" class="form-input" id="p-pass" placeholder="Min 6 characters"></div>
           <button class="btn-primary btn-gold" onclick="goToSurvey()">Next: Pre-Engagement Survey ›</button>
           <div class="auth-switch">Already joined? <a onclick="showPLogin()">Sign In</a></div>
         </div>
 
-        <!-- PARTICIPANT LOGIN — Magic Link -->
+        <!-- PARTICIPANT LOGIN — Email + Password -->
         <div id="form-plogin" style="display:none">
-          <div id="magic-link-form">
-            <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;">Enter your registered email. We'll send you a <strong style="color:var(--navy);">one-tap login link</strong> — no password needed. Works on any device.</p>
-            <div class="form-group"><label class="form-label">Registered Email Address</label><input type="email" class="form-input" id="pl-email" placeholder="you@example.com"></div>
-            <button class="btn-primary btn-gold" onclick="sendMagicLink()">✉️ Send Login Link</button>
+          <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" id="pl-email" placeholder="you@example.com"></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="pl-pass" placeholder="Your password"></div>
+          <button class="btn-primary btn-gold" onclick="participantLogin()">Sign In ›</button>
+          <div style="text-align:center;margin-top:10px;">
+            <a onclick="showForgotPassword()" style="font-size:13px;color:var(--muted);cursor:pointer;">Forgot password?</a>
           </div>
-          <div id="magic-sent-state" style="display:none">
-            <div class="magic-sent-box">
-              <div class="magic-sent-icon">📬</div>
-              <div class="magic-sent-title">Check Your Inbox!</div>
-              <div class="magic-sent-text">We've sent a login link to<br><span class="magic-sent-email" id="magic-sent-email"></span><br><br>Open that email and tap the link. You'll be signed in automatically — no password needed.</div>
-            </div>
-          </div>
-          <div class="auth-switch" style="margin-top:16px;">New here? <a onclick="showPSignup()">Register</a></div>
+          <div class="auth-switch" style="margin-top:12px;">New here? <a onclick="showPSignup()">Register</a></div>
+        </div>
+        <!-- FORGOT PASSWORD -->
+        <div id="form-forgot" style="display:none">
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">Enter your email and we'll send a password reset link.</p>
+          <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" id="forgot-email" placeholder="you@example.com"></div>
+          <button class="btn-primary btn-gold" onclick="sendPasswordReset()">Send Reset Link</button>
+          <div class="auth-switch" style="margin-top:12px;"><a onclick="showPLogin()">← Back to Sign In</a></div>
         </div>
 
         <!-- ADMIN LOGIN — Google Sign-In -->
@@ -816,6 +807,7 @@ body {
       <button class="a-nav-btn" onclick="showPanel('tasks',this)"><span class="nav-ic">📋</span> Tasks</button>
       <button class="a-nav-btn" onclick="showPanel('quiz',this)"><span class="nav-ic">🧠</span> Quiz Questions</button>
       <button class="a-nav-btn" onclick="showPanel('polls',this)"><span class="nav-ic">📊</span> Poll Questions</button>
+      <button class="a-nav-btn" onclick="showPanel('survey-config',this)"><span class="nav-ic">📝</span> Survey Builder</button>
       <div class="a-nav-section">Control</div>
       <button class="a-nav-btn" onclick="showPanel('leaderboard',this)"><span class="nav-ic">🏆</span> Leaderboard</button>
       <button class="a-nav-btn" onclick="showPanel('settings',this)"><span class="nav-ic">⚙️</span> Settings</button>
@@ -833,8 +825,32 @@ body {
             <div class="a-stat"><div class="a-stat-val" id="s-active">—</div><div class="a-stat-lbl">Active Today</div></div>
           </div>
           <div class="config-banner">
-            <h3>🔥 Firebase Connected</h3>
-            <p>All data is syncing live to Firebase Firestore. No Google Sheet URL to paste. All participants across all devices share the same database automatically.</p>
+            <h3>🔥 Firebase Connected — Where Your Data Lives</h3>
+            <p>All data saves to <strong>Firebase Firestore</strong>. To view it: go to <strong>console.firebase.google.com → your project → Firestore Database</strong>. You will see these collections:</p>
+          </div>
+          <div class="a-card" style="margin-bottom:18px;">
+            <h3>📂 Firestore Data Collections</h3>
+            <table class="p-table" style="margin-bottom:0;">
+              <thead><tr><th>Collection</th><th>What's stored there</th><th>How to view</th></tr></thead>
+              <tbody>
+                <tr><td><strong>participants</strong></td><td>Every registered user — name, email, points, tasks done, streak</td><td>Firestore → participants → click any document</td></tr>
+                <tr><td><strong>participants/{uid}/completions</strong></td><td>Each task, quiz, poll completed by a participant (sub-collection)</td><td>Firestore → participants → click a user → completions</td></tr>
+                <tr><td><strong>surveys</strong></td><td>Full pre-engagement survey answers for every participant</td><td>Firestore → surveys OR use "Export Survey CSV" in Survey Builder</td></tr>
+                <tr><td><strong>batches</strong></td><td>Your program batches — name, active week, active task</td><td>Firestore → batches</td></tr>
+                <tr><td><strong>tasks</strong></td><td>All 40 task details — title, message, image URL, points, status</td><td>Firestore → tasks</td></tr>
+                <tr><td><strong>themes</strong></td><td>Weekly theme titles and messages (weeks 1–8)</td><td>Firestore → themes</td></tr>
+                <tr><td><strong>quizzes</strong></td><td>Quiz questions and correct answers per task number</td><td>Firestore → quizzes</td></tr>
+                <tr><td><strong>polls</strong></td><td>Poll questions and point values per task number</td><td>Firestore → polls</td></tr>
+                <tr><td><strong>surveyQuestions</strong></td><td>Custom survey questions you add via Survey Builder</td><td>Firestore → surveyQuestions</td></tr>
+                <tr><td><strong>admins</strong></td><td>Admin user IDs (only you)</td><td>Firestore → admins</td></tr>
+                <tr><td><strong>config</strong></td><td>Points settings (task=10, quiz=5, poll=3, streak=2)</td><td>Firestore → config → global</td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:16px;background:var(--gold-pale);border-radius:10px;padding:14px;border:1px solid rgba(212,160,23,0.4);">
+              <p style="font-size:13px;color:#7A6020;line-height:1.7;">
+                <strong>💡 Tip:</strong> In Firestore, you can click any collection name to browse all documents. Click any document to see all fields. Use the <strong>Export CSV</strong> buttons in Participants and Survey Builder panels to download spreadsheets.
+              </p>
+            </div>
           </div>
           <div class="a-card">
             <h3>Quick Actions</h3>
@@ -903,7 +919,7 @@ body {
 
         <!-- THEMES -->
         <div id="panel-themes" class="a-panel">
-          <div class="panel-hd"><h2>Weekly Themes</h2><p>Upload photos — stored in Firebase Storage automatically</p></div>
+          <div class="panel-hd"><h2>Weekly Themes</h2><p>Set weekly themes — paste a public image URL for photos</p></div>
           <div class="a-card">
             <h3>Edit Weekly Theme</h3>
             <div class="form-row">
@@ -916,17 +932,9 @@ body {
               <div class="form-group"><label class="form-label">Theme Title</label><input type="text" class="form-input" id="t-title" placeholder="e.g. Healthy Lifestyle"></div>
             </div>
             <div class="form-group">
-              <label class="form-label">Theme Photo <span style="color:var(--gold-dim);font-weight:600;">(Upload from device → saves to Firebase Storage)</span></label>
-              <div class="upload-zone" id="t-upload-zone" onclick="document.getElementById('t-img-file').click()">
-                <input type="file" id="t-img-file" accept="image/*" onchange="handleThemeImgUpload(event)">
-                <div class="upload-zone-inner">
-                  <div class="upload-icon">📷</div>
-                  <div class="upload-text">Click to upload theme photo</div>
-                  <div class="upload-sub">JPG, PNG, WEBP · Max 5MB</div>
-                </div>
-                <img id="t-img-preview" class="upload-preview">
-                <button type="button" class="upload-clear-btn" id="t-clear-btn" onclick="clearThemeImg(event)">×</button>
-              </div>
+              <label class="form-label">Theme Image URL <span style="color:var(--muted);font-weight:500;">(Paste a public image link from Google Drive, Imgur, etc.)</span></label>
+              <input type="url" class="form-input" id="t-img-url" placeholder="https://drive.google.com/uc?id=… or https://i.imgur.com/…">
+              <p style="font-size:11px;color:var(--muted);margin-top:6px;">To use Google Drive: right-click image → "Get link" → set to Anyone with link → copy URL and change /view to /uc?export=view in the URL.</p>
             </div>
             <div class="form-group"><label class="form-label">Theme Message</label><textarea class="form-textarea" id="t-msg" placeholder="Week theme message for participants…"></textarea></div>
             <button class="btn-save" onclick="saveTheme()">Save Theme to Firebase</button>
@@ -936,7 +944,7 @@ body {
 
         <!-- TASKS -->
         <div id="panel-tasks" class="a-panel">
-          <div class="panel-hd"><h2>Tasks</h2><p>Add and manage all 40 tasks — saved to Firebase</p></div>
+          <div class="panel-hd"><h2>Tasks</h2><p>Add and manage all 40 tasks — paste image URLs from Google Drive or Imgur</p></div>
           <div class="a-card">
             <h3>Add / Edit Task</h3>
             <div class="form-row">
@@ -950,17 +958,9 @@ body {
             </div>
             <div class="form-group"><label class="form-label">Prompt Name (Task Title)</label><input type="text" class="form-input" id="tk-name" placeholder="e.g. One Hour for Self Everyday"></div>
             <div class="form-group">
-              <label class="form-label">Task Photo <span style="color:var(--gold-dim);font-weight:600;">(Upload from device)</span></label>
-              <div class="upload-zone" id="tk-upload-zone" onclick="document.getElementById('tk-img-file').click()">
-                <input type="file" id="tk-img-file" accept="image/*" onchange="handleTaskImgUpload(event)">
-                <div class="upload-zone-inner">
-                  <div class="upload-icon">📷</div>
-                  <div class="upload-text">Click to upload task photo</div>
-                  <div class="upload-sub">JPG, PNG, WEBP · Max 5MB</div>
-                </div>
-                <img id="tk-img-preview" class="upload-preview">
-                <button type="button" class="upload-clear-btn" id="tk-clear-btn" onclick="clearTaskImg(event)">×</button>
-              </div>
+              <label class="form-label">Task Image URL <span style="color:var(--muted);font-weight:500;">(Paste a public image link)</span></label>
+              <input type="url" class="form-input" id="tk-img-url" placeholder="https://drive.google.com/uc?id=… or https://i.imgur.com/…">
+              <p style="font-size:11px;color:var(--muted);margin-top:6px;">Paste any public image URL. Google Drive: change /view to /uc?export=view in the shared link.</p>
             </div>
             <div class="form-group"><label class="form-label">Daily Prompt Message</label><textarea class="form-textarea" id="tk-msg" placeholder="Task description and instructions…"></textarea></div>
             <div class="form-group"><label class="form-label">Resource Title</label><input type="text" class="form-input" id="tk-res-title" placeholder="e.g. Importance of daily exercise"></div>
@@ -1019,6 +1019,61 @@ body {
           </div>
         </div>
 
+
+        <!-- SURVEY BUILDER -->
+        <div id="panel-survey-config" class="a-panel">
+          <div class="panel-hd"><h2>Survey Builder</h2><p>Manage the pre-engagement survey questions shown at participant signup</p></div>
+          <div class="a-card" style="border-color:var(--gold);background:var(--gold-pale);">
+            <h3 style="color:var(--gold-dim)">📝 How This Works</h3>
+            <p style="font-size:14px;color:#7A6020;line-height:1.7;">Add, edit, or remove questions. Changes take effect immediately for new signups. Existing survey responses are preserved in Firestore under the <strong>surveys</strong> collection. Each participant's answers are stored against their UID.</p>
+          </div>
+          <div class="a-card">
+            <h3>Add / Edit Question</h3>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Question ID <span style="color:var(--muted);font-weight:400;">(e.g. q36, q37 — must be unique)</span></label><input type="text" class="form-input" id="sq-id" placeholder="e.g. q36" onchange="loadSurveyQuestion()"></div>
+              <div class="form-group"><label class="form-label">Type</label>
+                <select class="form-select" id="sq-type" onchange="toggleSurveyOpts()">
+                  <option value="radio">Multiple Choice (Radio)</option>
+                  <option value="section">Section Header</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label class="form-label">Question Text</label><input type="text" class="form-input" id="sq-label" placeholder="e.g. How often do you exercise in a week?"></div>
+            <div id="sq-opts-block">
+              <label class="form-label">Answer Options <span style="color:var(--muted);font-weight:400;">(one per line)</span></label>
+              <textarea class="form-textarea" id="sq-opts" rows="5" placeholder="Daily&#10;Very often (4-5 days a week)&#10;Often (2-3 days a week)&#10;Rarely&#10;Never"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+              <button class="btn-save" onclick="saveSurveyQuestion()">Save Question</button>
+              <button class="btn-danger" onclick="deleteSurveyQuestion()">Delete Question</button>
+            </div>
+          </div>
+          <div class="a-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+              <h3 style="margin-bottom:0">Current Survey Questions</h3>
+              <button class="btn-outline-admin" onclick="refreshSurveyList()">↻ Refresh</button>
+            </div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Click any question to edit it. Drag to reorder is not available — use numeric IDs (q1, q2…) to control order.</p>
+            <div id="survey-questions-list">
+              <p style="color:var(--muted);font-size:14px;">Loading…</p>
+            </div>
+          </div>
+          <div class="a-card">
+            <h3>View Survey Responses</h3>
+            <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px;">All survey responses are stored in Firebase Firestore under the <strong>surveys</strong> collection. To view them directly:</p>
+            <div style="background:var(--off-white);border-radius:10px;padding:14px;font-size:13px;color:var(--navy);line-height:1.8;">
+              1. Go to <strong>console.firebase.google.com</strong><br>
+              2. Open your project → <strong>Firestore Database</strong><br>
+              3. Click on the <strong>surveys</strong> collection<br>
+              4. Each document = one participant's full survey answers<br>
+              5. Click <strong>Export Survey CSV</strong> below to download all responses
+            </div>
+            <div style="margin-top:14px;">
+              <button class="btn-save btn-gold-admin" onclick="exportSurveyCSV()">⬇ Export Survey Responses CSV</button>
+            </div>
+          </div>
+        </div>
+
         <!-- LEADERBOARD -->
         <div id="panel-leaderboard" class="a-panel">
           <div class="panel-hd"><h2>Leaderboard</h2><p>Live all-batch rankings from Firebase</p></div>
@@ -1045,8 +1100,8 @@ body {
             <button class="btn-save" onclick="saveSettings()">Save Settings</button>
           </div>
           <div class="a-card" style="border-color:var(--gold);background:var(--gold-pale);">
-            <h3 style="color:var(--gold-dim)">🔥 Firebase Storage for Images</h3>
-            <p style="font-size:14px;color:#7A6020;line-height:1.7;">Photos you upload in Weekly Themes and Tasks are automatically stored in Firebase Storage. They appear instantly for all participants across all devices. No Google Drive, no links to copy — just upload and done.</p>
+            <h3 style="color:var(--gold-dim)">📸 About Images</h3>
+            <p style="font-size:14px;color:#7A6020;line-height:1.7;">Paste public image URLs in the Themes and Tasks sections. You can use <strong>Google Drive</strong> (share → Anyone with link → change /view to /uc?export=view) or <strong>Imgur</strong> (free image hosting at imgur.com). When you upgrade to Firebase Blaze plan, direct upload will be re-enabled.</p>
           </div>
         </div>
 
@@ -1098,9 +1153,11 @@ body {
     </div>
     <div class="help-item"><div class="help-num">1</div><div><h4>Sign in with Google</h4><p>Use your Google account to sign in as admin. No passwords. If you see "Access Denied", ask your technical contact to add your Google account to the admins list in Firestore.</p></div></div>
     <div class="help-item"><div class="help-num">2</div><div><h4>Create a Batch</h4><p>Batches → Fill name, start date, institution → Create Batch. Participants select this at signup.</p></div></div>
-    <div class="help-item"><div class="help-num">3</div><div><h4>Upload Photos</h4><p>In Weekly Themes or Tasks → click the upload zone → select a photo from your device. It saves automatically to Firebase Storage.</p></div></div>
+    <div class="help-item"><div class="help-num">3</div><div><h4>Add Images</h4><p>In Weekly Themes or Tasks → paste a public image URL. Use Google Drive (change /view to /uc?export=view in the link) or Imgur (free at imgur.com).</p></div></div>
     <div class="help-item"><div class="help-num">4</div><div><h4>Advance Tasks Daily</h4><p>Batches → click your batch → Batch Control → click "Advance Task" each day to unlock the next task for participants.</p></div></div>
-    <div class="help-item"><div class="help-num">5</div><div><h4>All Data is Automatic</h4><p>There is no Sheet URL to paste. Firebase handles everything. Data appears for all participants immediately after you save.</p></div></div>
+    <div class="help-item"><div class="help-num">4</div><div><h4>Advance Tasks Daily</h4><p>Batches → click your batch → click "Advance Task" each day to unlock the next task for participants.</p></div></div>
+    <div class="help-item"><div class="help-num">5</div><div><h4>View All Data</h4><p>Overview panel shows a full table of all Firestore collections and what is stored where. For raw data, go to console.firebase.google.com → Firestore Database.</p></div></div>
+    <div class="help-item"><div class="help-num">6</div><div><h4>Survey Builder</h4><p>Add custom questions in Survey Builder panel. New participants will see your questions. Export all responses as CSV from the same panel.</p></div></div>
   </div>
 </div>
 
@@ -1110,24 +1167,18 @@ body {
 <script>
 
 // ══════════════════════════════════════════════════════════════
-//  STEP 1: PASTE YOUR FIREBASE CONFIG HERE
-//  Get this from: Firebase Console → Project Settings → Your Apps → Web App
+//  PASTE YOUR FIREBASE CONFIG HERE
+//  Get from: Firebase Console → Project Settings → Your Apps → Web App
+//  Note: storageBucket can be left empty on the free Spark plan
 // ══════════════════════════════════════════════════════════════
 const firebaseConfig = {
   apiKey:            "AIzaSyCUOhQJtr9ogNrqRurxM_vS3AkTgzzDYZY",
   authDomain:        "yesiammindful.firebaseapp.com",
   projectId:         "yesiammindful",
-  storageBucket:     "yesiammindful.firebasestorage.app",
+  storageBucket:     "",   // Not needed on free plan - leave empty
   messagingSenderId: "329926766542",
   appId:             "1:329926766542:web:b302b75ea9394f6da2059f"
 };
-
-// ══════════════════════════════════════════════════════════════
-//  STEP 2: PASTE YOUR DEPLOYED APP URL HERE
-//  This is the URL where you host this HTML file
-//  e.g. "https://your-site.netlify.app" or your Vercel/GitHub Pages URL
-// ══════════════════════════════════════════════════════════════
-const APP_URL = "https://b4cf.github.io/yes-i-am-mindful";
 
 // ─────────────────────────────────────────────────────────────
 // Firebase Init
@@ -1135,7 +1186,7 @@ const APP_URL = "https://b4cf.github.io/yes-i-am-mindful";
 firebase.initializeApp(firebaseConfig);
 const auth    = firebase.auth();
 const db      = firebase.firestore();
-const storage = firebase.storage();
+// Storage removed - free plan
 const FieldValue = firebase.firestore.FieldValue;
 
 // ─────────────────────────────────────────────────────────────
@@ -1158,20 +1209,6 @@ const S = {
 // BOOT — Firebase Auth observer runs on every page load
 // ─────────────────────────────────────────────────────────────
 auth.onAuthStateChanged(async (fbUser) => {
-  // Handle magic link return
-  if (auth.isSignInWithEmailLink(window.location.href)) {
-    let email = localStorage.getItem('b4c_pendingEmail');
-    if (!email) email = window.prompt('Please confirm your email address:');
-    if (email) {
-      try {
-        await auth.signInWithEmailLink(email, window.location.href);
-        localStorage.removeItem('b4c_pendingEmail');
-        window.history.replaceState({}, document.title, window.location.pathname);
-        return; // onAuthStateChanged fires again with the user
-      } catch(e) { toast('❌ Link expired or invalid. Please try again.'); hideLoading(); showScreen('splash'); return; }
-    }
-  }
-
   if (!fbUser) {
     hideLoading();
     showScreen('splash');
@@ -1317,40 +1354,56 @@ function showSignup(role) {
 }
 
 function showPLogin() {
-  document.getElementById('form-psignup').style.display = 'none';
+  ['form-psignup','form-plogin','form-admin','form-forgot'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
   document.getElementById('form-plogin').style.display  = 'block';
   document.getElementById('auth-title').textContent = 'Welcome Back';
-  document.getElementById('auth-desc').textContent  = 'Sign in with your email';
+  document.getElementById('auth-desc').textContent  = 'Sign in to your account';
+}
+function showForgotPassword() {
+  ['form-psignup','form-plogin','form-admin','form-forgot'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  document.getElementById('form-forgot').style.display = 'block';
+  document.getElementById('auth-title').textContent = 'Reset Password';
+  document.getElementById('auth-desc').textContent  = 'We will email you a reset link';
 }
 function showPSignup() {
-  document.getElementById('form-plogin').style.display  = 'none';
+  ['form-psignup','form-plogin','form-admin','form-forgot'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
   document.getElementById('form-psignup').style.display = 'block';
   document.getElementById('auth-title').textContent = 'Join the Program';
 }
 
-// Magic Link sign-in
-async function sendMagicLink() {
-  const email = _v('pl-email');
-  if (!email) { toast('⚠️ Enter your email address'); return; }
-
-  // Verify email is registered first
-  const snap = await db.collection('participants').where('email','==',email).limit(1).get();
-  if (snap.empty) { toast('❌ No account found. Please register first.'); return; }
-
-  const actionCodeSettings = {
-    url: APP_URL,
-    handleCodeInApp: true,
-  };
+// Email + Password sign-in
+async function participantLogin() {
+  const email = _v('pl-email'), pass = _v('pl-pass');
+  if (!email || !pass) { toast('⚠️ Enter email and password'); return; }
   try {
-    await auth.sendSignInLinkToEmail(email, actionCodeSettings);
-    localStorage.setItem('b4c_pendingEmail', email);
-    document.getElementById('magic-link-form').style.display  = 'none';
-    document.getElementById('magic-sent-state').style.display = 'block';
-    document.getElementById('magic-sent-email').textContent   = email;
-    toast('✉️ Login link sent!');
+    await auth.signInWithEmailAndPassword(email, pass);
+    // onAuthStateChanged handles the rest
   } catch(e) {
-    toast('❌ Error sending link. Check your Firebase console for email configuration.');
-    console.error(e);
+    if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
+      toast('❌ No account found. Please register first.');
+    } else if (e.code === 'auth/wrong-password') {
+      toast('❌ Wrong password. Try again or reset your password.');
+    } else {
+      toast('❌ ' + (e.message || 'Sign-in failed'));
+    }
+  }
+}
+
+async function sendPasswordReset() {
+  const email = _v('forgot-email');
+  if (!email) { toast('⚠️ Enter your email address'); return; }
+  try {
+    await auth.sendPasswordResetEmail(email);
+    toast('✉️ Reset link sent! Check your inbox.');
+    showPLogin();
+  } catch(e) {
+    toast('❌ Could not send reset email: ' + (e.message || e.code));
   }
 }
 
@@ -1408,9 +1461,10 @@ const SURVEY_QUESTIONS = [
   {id:'q35', label:'Do you prefer the digital version of a document over hard copy?', opts:['Yes','No']},
 ];
 
-function buildSurveyHTML() {
+function buildSurveyHTML(customQuestions) {
+  const questions = customQuestions || SURVEY_QUESTIONS;
   let h = '';
-  SURVEY_QUESTIONS.forEach(q => {
+  questions.forEach(q => {
     if (q.type === 'section') { h += `<div class="survey-section-title">${q.label}</div>`; return; }
     h += `<div class="survey-q"><span class="survey-q-label">${q.label}</span><div class="survey-radio-group">${q.opts.map(opt => `<label class="survey-radio-opt"><input type="radio" name="${q.id}" value="${opt}"> ${opt}</label>`).join('')}</div></div>`;
   });
@@ -1419,25 +1473,46 @@ function buildSurveyHTML() {
 
 function goToSurvey() {
   const name = _v('p-name'), email = _v('p-email'), batchId = _v('p-batch');
+  const pass = _v('p-pass');
   if (!name || !email || !batchId) { toast('⚠️ Please fill name, email and select a batch'); return; }
-  if (!S.fbUser) { toast('⚠️ Please wait — checking login status…'); return; }
-  window._tmpSignup = { name, email, mobile: _v('p-mobile'), institution: _v('p-inst'), batchId };
-  document.getElementById('survey-body').innerHTML = buildSurveyHTML();
+  if (!pass || pass.length < 6) { toast('⚠️ Password must be at least 6 characters'); return; }
+  window._tmpSignup = { name, email, mobile: _v('p-mobile'), institution: _v('p-inst'), batchId, pass };
+  // Try to load custom questions from Firestore, fall back to defaults
+  loadSurveyForSignup().then(customQuestions => {
+    document.getElementById('survey-body').innerHTML = buildSurveyHTML(customQuestions || null);
+  });
   showScreen('survey');
 }
 
 async function submitSurvey() {
   const answers = {};
   let unanswered = 0;
-  SURVEY_QUESTIONS.filter(q => q.id).forEach(q => {
-    const sel = document.querySelector(`input[name="${q.id}"]:checked`);
-    if (sel) answers[q.id] = sel.value;
+  // Collect all radio questions dynamically (works with both default and custom questions)
+  const allNames = new Set([...document.querySelectorAll('#survey-body input[type="radio"]')].map(i => i.name));
+  allNames.forEach(qid => {
+    const sel = document.querySelector(`input[name="${qid}"]:checked`);
+    if (sel) answers[qid] = sel.value;
     else unanswered++;
   });
   if (unanswered > 5) { toast(`⚠️ Please answer at least ${35 - 5} questions`); return; }
 
   const tmp = window._tmpSignup || {};
-  const uid  = S.fbUser.uid;
+
+  // Create Firebase Auth account with email + password
+  let uid;
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(tmp.email, tmp.pass);
+    uid = cred.user.uid;
+    S.fbUser = cred.user;
+  } catch(e) {
+    if (e.code === 'auth/email-already-in-use') {
+      toast('⚠️ Email already registered. Please sign in instead.');
+      showPLogin();
+    } else {
+      toast('❌ ' + (e.message || 'Registration failed'));
+    }
+    return;
+  }
 
   // Save participant doc
   await db.collection('participants').doc(uid).set({
@@ -1771,6 +1846,7 @@ function showPanel(id, btn) {
   document.querySelectorAll('.a-nav-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   else { const el = document.querySelector(`.a-nav-btn[onclick*="'${id}'"]`); if (el) el.classList.add('active'); }
+  if (id === 'survey-config') refreshSurveyList();
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -1864,31 +1940,16 @@ function renderParticipants() {
 function loadTheme() {
   const w = document.getElementById('t-week').value;
   const t = S.themes[w] || S.themes[String(w)] || {};
-  document.getElementById('t-title').value = t.title || '';
-  document.getElementById('t-msg').value   = t.message || '';
-  clearThemeImgSilent();
-  if (t.imageUrl) {
-    const p = document.getElementById('t-img-preview');
-    p.src = t.imageUrl; p.classList.add('show');
-    document.getElementById('t-clear-btn').classList.add('show');
-    document.getElementById('t-upload-zone').classList.add('has-image');
-    window._themeImgFile = null; window._themeImgExisting = t.imageUrl;
-  }
+  document.getElementById('t-title').value   = t.title || '';
+  document.getElementById('t-msg').value     = t.message || '';
+  document.getElementById('t-img-url').value = t.imageUrl || '';
 }
 
 async function saveTheme() {
-  const w   = document.getElementById('t-week').value;
-  const title   = _v('t-title');
-  const message = _v('t-msg');
-  let imageUrl  = window._themeImgExisting || '';
-
-  if (window._themeImgFile) {
-    toast('☁️ Uploading image…');
-    const ref  = storage.ref(`themes/week_${w}`);
-    await ref.put(window._themeImgFile);
-    imageUrl = await ref.getDownloadURL();
-  }
-
+  const w        = document.getElementById('t-week').value;
+  const title    = _v('t-title');
+  const message  = _v('t-msg');
+  const imageUrl = _v('t-img-url');
   const data = { week: parseInt(w), title, message, imageUrl, updatedAt: FieldValue.serverTimestamp() };
   await db.collection('themes').doc(String(w)).set(data);
   S.themes[String(w)] = data;
@@ -1912,30 +1973,17 @@ async function loadTask() {
   document.getElementById('tk-week').value        = t.week || 1;
   document.getElementById('tk-name').value        = t.name || '';
   document.getElementById('tk-msg').value         = t.message || '';
+  document.getElementById('tk-img-url').value     = t.imageUrl || '';
   document.getElementById('tk-res-title').value   = t.resourceTitle || '';
   document.getElementById('tk-res-msg').value     = t.resourceMessage || '';
   document.getElementById('tk-points').value      = t.points || 10;
   document.getElementById('tk-status').value      = t.status || 'locked';
-  clearTaskImgSilent();
-  if (t.imageUrl) {
-    const p = document.getElementById('tk-img-preview');
-    p.src = t.imageUrl; p.classList.add('show');
-    document.getElementById('tk-clear-btn').classList.add('show');
-    document.getElementById('tk-upload-zone').classList.add('has-image');
-    window._taskImgFile = null; window._taskImgExisting = t.imageUrl;
-  }
 }
 
 async function saveTask() {
   const num = parseInt(document.getElementById('tk-num').value);
   if (!num || num < 1 || num > 40) { toast('⚠️ Task number must be 1–40'); return; }
-  let imageUrl = window._taskImgExisting || '';
-  if (window._taskImgFile) {
-    toast('☁️ Uploading image…');
-    const ref = storage.ref(`tasks/task_${num}`);
-    await ref.put(window._taskImgFile);
-    imageUrl = await ref.getDownloadURL();
-  }
+  const imageUrl = _v('tk-img-url');
   const data = {
     num, week: parseInt(document.getElementById('tk-week').value),
     name: _v('tk-name'), message: _v('tk-msg'), imageUrl,
@@ -2074,58 +2122,142 @@ async function saveSettings() {
   toast('✅ Settings saved to Firebase!');
 }
 
+// Image upload functions removed — using URL input instead (free plan)
+
+
 // ─────────────────────────────────────────────────────────────
-// IMAGE UPLOAD HANDLERS
+// ADMIN — SURVEY BUILDER
 // ─────────────────────────────────────────────────────────────
-function handleThemeImgUpload(e) {
-  const file = e.target.files[0]; if (!file) return;
-  if (file.size > 6*1024*1024) { toast('⚠️ Image too large. Max 5MB.'); return; }
-  window._themeImgFile = file;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    const p = document.getElementById('t-img-preview');
-    p.src = ev.target.result; p.classList.add('show');
-    document.getElementById('t-clear-btn').classList.add('show');
-    document.getElementById('t-upload-zone').classList.add('has-image');
-  };
-  reader.readAsDataURL(file);
+async function refreshSurveyList() {
+  const snap = await db.collection('surveyQuestions').orderBy('order','asc').get();
+  let questions = [];
+  snap.forEach(doc => questions.push({ id: doc.id, ...doc.data() }));
+
+  // If no custom questions yet, show the defaults
+  if (!questions.length) {
+    document.getElementById('survey-questions-list').innerHTML = `
+      <div style="background:var(--gold-pale);border:1px solid rgba(212,160,23,0.4);border-radius:10px;padding:16px;">
+        <p style="font-size:13px;color:#7A6020;line-height:1.7;">
+          <strong>No custom questions yet.</strong> The portal currently uses the 35 default survey questions built into the app.<br><br>
+          Add your first question above and it will be saved to Firestore. Once you save any questions here, the survey will use <strong>only these Firestore questions</strong> instead of the defaults.
+        </p>
+      </div>`;
+    return;
+  }
+
+  const html = questions.map((q, i) => `
+    <div class="task-row" style="cursor:pointer;" onclick="editSurveyQuestion('${q.id}')">
+      <div class="task-num-badge" style="font-size:11px;">${q.id}</div>
+      <div class="task-row-info">
+        <h4>${q.type === 'section' ? '📌 SECTION: ' + q.label : q.label}</h4>
+        <p>${q.type === 'section' ? 'Section divider' : (q.opts || []).length + ' options  ·  Order: ' + (q.order || i)}</p>
+      </div>
+      <span style="font-size:12px;color:var(--muted);">click to edit</span>
+    </div>`).join('');
+  document.getElementById('survey-questions-list').innerHTML = html;
 }
 
-function clearThemeImg(e) {
-  e.stopPropagation();
-  clearThemeImgSilent();
-  document.getElementById('t-img-file').value = '';
-  window._themeImgFile = null; window._themeImgExisting = null;
-}
-function clearThemeImgSilent() {
-  document.getElementById('t-img-preview').classList.remove('show');
-  document.getElementById('t-clear-btn').classList.remove('show');
-  document.getElementById('t-upload-zone').classList.remove('has-image');
+function editSurveyQuestion(id) {
+  document.getElementById('sq-id').value = id;
+  loadSurveyQuestion();
 }
 
-function handleTaskImgUpload(e) {
-  const file = e.target.files[0]; if (!file) return;
-  if (file.size > 6*1024*1024) { toast('⚠️ Image too large. Max 5MB.'); return; }
-  window._taskImgFile = file;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    const p = document.getElementById('tk-img-preview');
-    p.src = ev.target.result; p.classList.add('show');
-    document.getElementById('tk-clear-btn').classList.add('show');
-    document.getElementById('tk-upload-zone').classList.add('has-image');
-  };
-  reader.readAsDataURL(file);
+async function loadSurveyQuestion() {
+  const id = _v('sq-id');
+  if (!id) return;
+  try {
+    const doc = await db.collection('surveyQuestions').doc(id).get();
+    if (!doc.exists) return;
+    const q = doc.data();
+    document.getElementById('sq-type').value  = q.type || 'radio';
+    document.getElementById('sq-label').value = q.label || '';
+    document.getElementById('sq-opts').value  = (q.opts || []).join('\n');
+    toggleSurveyOpts();
+  } catch(e) { /* New question */ }
 }
 
-function clearTaskImg(e) {
-  e.stopPropagation(); clearTaskImgSilent();
-  document.getElementById('tk-img-file').value = '';
-  window._taskImgFile = null; window._taskImgExisting = null;
+function toggleSurveyOpts() {
+  const type = document.getElementById('sq-type').value;
+  document.getElementById('sq-opts-block').style.display = type === 'section' ? 'none' : 'block';
 }
-function clearTaskImgSilent() {
-  document.getElementById('tk-img-preview').classList.remove('show');
-  document.getElementById('tk-clear-btn').classList.remove('show');
-  document.getElementById('tk-upload-zone').classList.remove('has-image');
+
+async function saveSurveyQuestion() {
+  const id   = _v('sq-id');
+  const type = document.getElementById('sq-type').value;
+  const label = _v('sq-label');
+  if (!id || !label) { toast('⚠️ Question ID and text are required'); return; }
+  const opts = type === 'section' ? [] : _v('sq-opts').split('\n').map(s => s.trim()).filter(Boolean);
+  // Determine order from id (strip non-numeric or use timestamp)
+  const orderNum = parseInt(id.replace(/[^0-9]/g,'')) || Date.now();
+  const data = { type, label, opts, order: orderNum, updatedAt: FieldValue.serverTimestamp() };
+  await db.collection('surveyQuestions').doc(id).set(data);
+  toast('✅ Question "' + id + '" saved!');
+  refreshSurveyList();
+}
+
+async function deleteSurveyQuestion() {
+  const id = _v('sq-id');
+  if (!id) { toast('⚠️ Enter the question ID to delete'); return; }
+  if (!confirm('Delete question "' + id + '"? This cannot be undone.')) return;
+  await db.collection('surveyQuestions').doc(id).delete();
+  ['sq-id','sq-label','sq-opts'].forEach(i => document.getElementById(i).value = '');
+  toast('🗑 Question deleted');
+  refreshSurveyList();
+}
+
+async function exportSurveyCSV() {
+  toast('⏳ Loading survey responses…');
+  const [surveySnap, questionSnap] = await Promise.all([
+    db.collection('surveys').get(),
+    db.collection('surveyQuestions').orderBy('order','asc').get()
+  ]);
+
+  // Build question list for headers
+  let questionIds = [];
+  let questionLabels = {};
+  if (!questionSnap.empty) {
+    questionSnap.forEach(doc => {
+      const q = doc.data();
+      if (q.type !== 'section') {
+        questionIds.push(doc.id);
+        questionLabels[doc.id] = q.label;
+      }
+    });
+  } else {
+    // Use default question IDs
+    for (let i = 1; i <= 35; i++) {
+      questionIds.push('q' + i);
+      questionLabels['q' + i] = 'Question ' + i;
+    }
+  }
+
+  const headers = ['Name','Email','Batch','Submitted At', ...questionIds.map(id => questionLabels[id] || id)];
+  const rows = [headers];
+  surveySnap.forEach(doc => {
+    const s = doc.data();
+    const ts = s.submittedAt ? (s.submittedAt.toDate ? s.submittedAt.toDate().toLocaleDateString() : s.submittedAt) : '';
+    const row = [s.name||'', s.email||'', (S.batches[s.batchId]||{}).name||s.batchId||'', ts, ...questionIds.map(id => s.answers ? (s.answers[id] || '') : '')];
+    rows.push(row);
+  });
+
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'SurveyResponses_YesIAmMindful.csv'; a.click();
+  toast('⬇️ Survey CSV exported! (' + (rows.length-1) + ' responses)');
+}
+
+// Load custom survey questions from Firestore at signup time
+async function loadSurveyForSignup() {
+  try {
+    const snap = await db.collection('surveyQuestions').orderBy('order','asc').get();
+    if (!snap.empty) {
+      const questions = [];
+      snap.forEach(doc => questions.push({ id: doc.id, ...doc.data() }));
+      return questions;
+    }
+  } catch(e) { /* fallback to defaults */ }
+  return null; // Use built-in defaults
 }
 
 // ─────────────────────────────────────────────────────────────
