@@ -220,15 +220,7 @@ body {
   background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold) 100%);
   box-shadow: 0 6px 20px rgba(212,160,23,0.35);
 }
-.btn-google {
-  width:100%; padding:13px 14px; margin-bottom:12px;
-  background: var(--white);
-  border: 1.5px solid var(--slate); border-radius:var(--radius-sm);
-  font-family:'Source Sans 3', sans-serif; font-size:15px; font-weight:600;
-  color:var(--text); cursor:pointer; display:flex; align-items:center;
-  justify-content:center; gap:10px; transition:all 0.2s;
-}
-.btn-google:hover { border-color:var(--navy); box-shadow:var(--shadow); }
+/* Admin uses email+password — no Google sign-in */
 .auth-switch { text-align:center; margin-top:16px; font-size:14px; color:var(--muted); }
 .auth-switch a { color:var(--navy); font-weight:600; cursor:pointer; text-decoration:none; }
 .auth-switch a:hover { color:var(--gold-dim); }
@@ -371,29 +363,41 @@ body {
 .resource-link-btn:hover { background:rgba(212,160,23,0.3); }
 .lb-hero {
   background:linear-gradient(135deg, var(--navy-deep), var(--navy-mid));
-  padding:24px 20px; text-align:center;
+  padding:20px 20px 0; text-align:center;
 }
-.lb-hero h2 { font-family:'Oswald',sans-serif; font-size:28px; font-weight:700; color:var(--white); text-transform:uppercase; letter-spacing:1px; }
-.lb-hero p { color:rgba(255,255,255,0.6); font-size:13px; margin-top:4px; }
-.lb-list { padding:16px; }
+.lb-hero h2 { font-family:'Oswald',sans-serif; font-size:26px; font-weight:700; color:var(--white); text-transform:uppercase; letter-spacing:1px; }
+.lb-hero p { color:rgba(255,255,255,0.6); font-size:13px; margin-top:3px; }
+/* KPI summary strip */
+.lb-kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:14px 16px 0; }
+.lb-kpi { background:rgba(255,255,255,0.08); border-radius:10px; padding:10px 6px; text-align:center; border:1px solid rgba(255,255,255,0.1); }
+.lb-kpi-val { font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:var(--gold-light); line-height:1; }
+.lb-kpi-lbl { font-size:9px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.5px; margin-top:3px; }
+/* Tab bar */
+.lb-tabs { display:flex; background:var(--navy-deep); padding:0 16px; gap:0; border-bottom:2px solid rgba(255,255,255,0.08); }
+.lb-tab { flex:1; padding:10px 4px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:rgba(255,255,255,0.4); border:none; background:none; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; font-family:'Source Sans 3',sans-serif; transition:all 0.15s; }
+.lb-tab.active { color:var(--gold-light); border-bottom-color:var(--gold); }
+.lb-list { padding:14px 16px 80px; }
 .lb-item {
   display:flex; align-items:center; gap:12px;
-  background:var(--white); border-radius:14px; padding:14px 16px; margin-bottom:10px;
+  background:var(--white); border-radius:14px; padding:13px 14px; margin-bottom:8px;
   box-shadow:var(--shadow); border:1.5px solid var(--border); transition:all 0.15s;
 }
 .lb-item.mine { border-color:var(--gold); background:var(--gold-pale); }
-.lb-item:hover { transform:translateX(4px); }
+.lb-item:hover { transform:translateX(3px); }
 .lb-rank { font-family:'Oswald',sans-serif; font-size:18px; font-weight:700; color:var(--muted); width:28px; text-align:center; flex-shrink:0; }
-.lb-rank.r1 { color:#D4AF37; }
-.lb-rank.r2 { color:#A8A9AD; }
-.lb-rank.r3 { color:#CD7F32; }
+.lb-rank.r1 { color:#D4AF37; } .lb-rank.r2 { color:#A8A9AD; } .lb-rank.r3 { color:#CD7F32; }
 .lb-av { width:38px; height:38px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg, var(--navy),var(--navy-light)); display:flex;align-items:center;justify-content:center; font-size:14px; font-weight:700; color:var(--white); }
 .lb-av.gold-av { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy-deep); }
-.lb-info { flex:1; }
-.lb-name { font-size:15px; font-weight:600; color:var(--navy); }
-.lb-batch { font-size:11px; color:var(--muted); margin-top:1px; }
-.lb-pts { font-family:'Oswald',sans-serif; font-size:18px; font-weight:700; color:var(--navy); }
-.lb-pts-lbl { font-size:10px; color:var(--muted); text-align:right; }
+.lb-info { flex:1; min-width:0; }
+.lb-name { font-size:14px; font-weight:600; color:var(--navy); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lb-sub { font-size:11px; color:var(--muted); margin-top:1px; }
+.lb-val-wrap { text-align:right; flex-shrink:0; }
+.lb-pts { font-family:'Oswald',sans-serif; font-size:18px; font-weight:700; color:var(--navy); line-height:1; }
+.lb-pts-lbl { font-size:10px; color:var(--muted); margin-top:1px; }
+/* My rank banner */
+.lb-my-rank { margin:0 16px 0; background:linear-gradient(90deg,var(--navy),var(--navy-light)); border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:10px; }
+.lb-my-rank-lbl { font-size:12px; color:rgba(255,255,255,0.6); }
+.lb-my-rank-val { font-family:'Oswald',sans-serif; font-size:20px; font-weight:700; color:var(--gold-light); margin-left:auto; }
 .profile-hero { background:linear-gradient(135deg, var(--navy-deep), var(--navy-mid)); padding:32px 20px; text-align:center; }
 .profile-av-big { width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--gold), var(--gold-light)); display:flex;align-items:center;justify-content:center; font-family:'Oswald',sans-serif; font-size:28px; font-weight:700; color:var(--navy-deep); margin:0 auto 12px; box-shadow:0 4px 20px rgba(212,160,23,0.4); }
 .profile-name-big { font-family:'Oswald',sans-serif; font-size:24px; font-weight:700; color:var(--white); text-transform:uppercase; letter-spacing:0.5px; }
@@ -619,9 +623,9 @@ body {
 <body>
 
 <!-- ── LOADING OVERLAY ── -->
-<div id="loading-overlay">
+<div id="loading-overlay" class="hidden">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Loading…</div>
+  <div class="loading-text" id="loading-text">Loading…</div>
 </div>
 
 <!-- SPLASH -->
@@ -675,7 +679,7 @@ body {
             <select class="form-select" id="p-batch"><option value="">Choose your batch…</option></select>
           </div>
           <div class="form-group"><label class="form-label">Create Password</label><input type="password" class="form-input" id="p-pass" placeholder="Min 6 characters"></div>
-          <button class="btn-primary btn-gold" onclick="goToSurvey()" id="btn-register">Create Account ›</button>
+          <button class="btn-primary btn-gold" onclick="registerParticipant()" id="btn-register">Create Account ›</button>
           <div class="auth-switch">Already joined? <a onclick="showPLogin()">Sign In</a></div>
         </div>
 
@@ -697,14 +701,24 @@ body {
           <div class="auth-switch" style="margin-top:12px;"><a onclick="showPLogin()">← Back to Sign In</a></div>
         </div>
 
-        <!-- ADMIN LOGIN — Google Sign-In -->
+        <!-- ADMIN LOGIN — Email + Password -->
         <div id="form-admin" style="display:none">
-          <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;">Admins sign in securely with their Google account. No password to remember.</p>
-          <button class="btn-google" onclick="adminGoogleLogin()">
-            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.7 2.3 30.2 0 24 0 14.6 0 6.6 5.4 2.5 13.3l7.8 6.1C12.3 13.4 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.5c-.5 2.9-2.1 5.3-4.5 7l7 5.4C43.3 37.1 46.1 31.2 46.1 24.5z"/><path fill="#FBBC05" d="M10.3 28.6A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.1.8-4.6l-7.8-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.5 10.7l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7-5.4c-2 1.4-4.6 2.2-8.2 2.2-6.3 0-11.7-3.9-13.7-9.3l-7.8 6.1C6.6 42.6 14.6 48 24 48z"/></svg>
-            Sign in with Google
-          </button>
-          <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px;">Only authorised admins can access this panel.</p>
+          <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;">Admin access only. Sign in with your administrator email and password.</p>
+          <div class="form-group"><label class="form-label">Admin Email</label><input type="email" class="form-input" id="a-email" placeholder="admin@bridge4change.org"></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="a-pass" placeholder="Your admin password"></div>
+          <button class="btn-primary" onclick="adminLogin()">Sign In as Admin ›</button>
+          <div style="text-align:center;margin-top:10px;">
+            <a onclick="showAdminForgot()" style="font-size:13px;color:var(--muted);cursor:pointer;">Forgot password?</a>
+          </div>
+          <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">Only authorised admin accounts can access this panel.</p>
+        </div>
+
+        <!-- ADMIN FORGOT PASSWORD -->
+        <div id="form-admin-forgot" style="display:none">
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">Enter your admin email and we will send a reset link.</p>
+          <div class="form-group"><label class="form-label">Admin Email</label><input type="email" class="form-input" id="a-forgot-email" placeholder="admin@bridge4change.org"></div>
+          <button class="btn-primary" onclick="sendAdminReset()">Send Reset Link</button>
+          <div class="auth-switch" style="margin-top:12px;"><a onclick="showAdminLogin()">← Back to Admin Login</a></div>
         </div>
 
         <p class="back-link" onclick="goSplash()">← Back to Home</p>
@@ -808,7 +822,36 @@ body {
     </div>
 
     <div id="pv-leaderboard" class="p-view fade-in">
-      <div class="lb-hero"><h2>🏆 Leaderboard</h2><p id="lb-batch-name">Your Batch Rankings</p></div>
+      <!-- Hero + personal KPI strip -->
+      <div class="lb-hero">
+        <h2>🏆 Rankings</h2>
+        <p id="lb-batch-name">Your Batch</p>
+        <div class="lb-kpi-strip">
+          <div class="lb-kpi">
+            <div class="lb-kpi-val" id="kpi-rank">—</div>
+            <div class="lb-kpi-lbl">My Rank</div>
+          </div>
+          <div class="lb-kpi">
+            <div class="lb-kpi-val" id="kpi-tasks">0</div>
+            <div class="lb-kpi-lbl">Tasks Done</div>
+          </div>
+          <div class="lb-kpi">
+            <div class="lb-kpi-val" id="kpi-polls">0</div>
+            <div class="lb-kpi-lbl">Polls Done</div>
+          </div>
+          <div class="lb-kpi">
+            <div class="lb-kpi-val" id="kpi-pts">0</div>
+            <div class="lb-kpi-lbl">My Points</div>
+          </div>
+        </div>
+        <!-- Tab bar -->
+        <div class="lb-tabs" style="margin-top:12px;">
+          <button class="lb-tab active" onclick="switchLBTab('points',this)">🏅 Points</button>
+          <button class="lb-tab" onclick="switchLBTab('tasks',this)">✅ Tasks</button>
+          <button class="lb-tab" onclick="switchLBTab('polls',this)">📊 Polls</button>
+          <button class="lb-tab" onclick="switchLBTab('streak',this)">🔥 Streak</button>
+        </div>
+      </div>
       <div class="lb-list" id="p-lb-list"></div>
     </div>
 
@@ -1232,6 +1275,32 @@ body {
   </div>
 </div>
 
+<!-- QUICK SURVEY MODAL — shown post-signup -->
+<div class="modal-bg" id="survey-modal" style="align-items:flex-start;padding:0;">
+  <div class="modal-box" style="max-width:100%;width:100%;min-height:100vh;border-radius:0;max-height:100vh;">
+    <div class="modal-hd" style="border-radius:0;position:sticky;top:0;z-index:10;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <h3>📋 Quick Survey</h3>
+          <p>Just a few questions to personalise your experience</p>
+        </div>
+        <div id="survey-progress-lbl" style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--gold-light);flex-shrink:0;"></div>
+      </div>
+      <!-- Progress bar -->
+      <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin-top:12px;overflow:hidden;">
+        <div id="survey-prog-fill" style="height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width 0.3s;"></div>
+      </div>
+    </div>
+    <div class="modal-body" id="survey-modal-body">
+      <div style="text-align:center;padding:40px 0;color:var(--muted);">Loading survey…</div>
+    </div>
+    <div class="modal-footer" style="position:sticky;bottom:0;background:var(--white);padding:16px 22px;border-top:1px solid var(--border);">
+      <button class="btn-modal-submit" id="survey-submit-btn" onclick="submitSurveyModal()">Submit & Enter Program →</button>
+      <button class="btn-modal-close" id="survey-skip-btn" onclick="skipSurveyModal()">Skip survey for now</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1242,13 +1311,12 @@ body {
       <h2>Admin Help</h2>
       <button onclick="closeHelp()" style="border:none;background:none;font-size:26px;cursor:pointer;color:var(--muted);">×</button>
     </div>
-    <div class="help-item"><div class="help-num">1</div><div><h4>Sign in with Google</h4><p>Use your Google account to sign in as admin. No passwords. If you see "Access Denied", ask your technical contact to add your Google account to the admins list in Firestore.</p></div></div>
-    <div class="help-item"><div class="help-num">2</div><div><h4>Create a Batch</h4><p>Batches → Fill name, start date, institution → Create Batch. Participants select this at signup.</p></div></div>
-    <div class="help-item"><div class="help-num">3</div><div><h4>Add Images</h4><p>In Weekly Themes or Tasks → paste a public image URL. Use Google Drive (change /view to /uc?export=view in the link) or Imgur (free at imgur.com).</p></div></div>
-    <div class="help-item"><div class="help-num">4</div><div><h4>Advance Tasks Daily</h4><p>Batches → click your batch → Batch Control → click "Advance Task" each day to unlock the next task for participants.</p></div></div>
-    <div class="help-item"><div class="help-num">4</div><div><h4>Advance Tasks Daily</h4><p>Batches → click your batch → click "Advance Task" each day to unlock the next task for participants.</p></div></div>
-    <div class="help-item"><div class="help-num">5</div><div><h4>View All Data</h4><p>Overview panel shows a full table of all Firestore collections and what is stored where. For raw data, go to console.firebase.google.com → Firestore Database.</p></div></div>
-    <div class="help-item"><div class="help-num">6</div><div><h4>Survey Builder</h4><p>Add custom questions in Survey Builder panel. New participants will see your questions. Export all responses as CSV from the same panel.</p></div></div>
+    <div class="help-item"><div class="help-num">1</div><div><h4>Admin Sign In</h4><p>Use your admin email and password — same as any participant login but your account must also have its UID listed in the Firestore "admins" collection. See the SOP for setup instructions.</p></div></div>
+    <div class="help-item"><div class="help-num">2</div><div><h4>Create a Batch</h4><p>Batches → fill name, start date, institution → Create Batch. Participants select this batch when registering.</p></div></div>
+    <div class="help-item"><div class="help-num">3</div><div><h4>Add Task Content</h4><p>Tasks → enter task number → fill Title, Description, Resource text. Quiz Questions and Poll Questions panels use the same task number to link content.</p></div></div>
+    <div class="help-item"><div class="help-num">4</div><div><h4>Advance Tasks</h4><p>Batches → click your batch → click "Advance Task" to unlock the next task for all participants in that batch.</p></div></div>
+    <div class="help-item"><div class="help-num">5</div><div><h4>View All Data</h4><p>Overview panel shows a full table of all Firestore collections. For raw data: console.firebase.google.com → your project → Firestore Database.</p></div></div>
+    <div class="help-item"><div class="help-num">6</div><div><h4>Poll Categories</h4><p>When saving a poll, assign a category (Positive / Neutral / Needs Improvement) to each option. This drives the Mindfulness Insights section on participant dashboards.</p></div></div>
   </div>
 </div>
 
@@ -1263,17 +1331,45 @@ body {
 //  Note: storageBucket can be left empty on the free Spark plan
 // ══════════════════════════════════════════════════════════════
 const firebaseConfig = {
-  apiKey:            "AIzaSyCUOhQJtr9ogNrqRurxM_vS3AkTgzzDYZY",
-  authDomain:        "yesiammindful.firebaseapp.com",
-  projectId:         "yesiammindful",
+  apiKey:            "AIzaSyAk4cy8bjG-AZvjJB5BGY0gFDXkmABDqKI",
+  authDomain:        "yes-i-am-mindful.firebaseapp.com",
+  projectId:         "yes-i-am-mindful",
   storageBucket:     "",   // Not needed on free plan - leave empty
-  messagingSenderId: "329926766542",
-  appId:             "1:329926766542:web:b302b75ea9394f6da2059f"
+  messagingSenderId: "279234794554",
+  appId:             "1:279234794554:web:c3fdd1031fa75b8b139103"
 };
 
 // ─────────────────────────────────────────────────────────────
-// Firebase Init
+// Firebase Init — with config validation
 // ─────────────────────────────────────────────────────────────
+const _cfgOk = !firebaseConfig.apiKey.includes('PASTE_YOUR') &&
+               firebaseConfig.projectId && firebaseConfig.projectId.length > 3;
+
+if (!_cfgOk) {
+  // Show a clear setup error instead of an infinite spinner
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    document.body.insertAdjacentHTML('beforeend', `
+      <div style="position:fixed;inset:0;background:#0F1E2E;display:flex;align-items:center;justify-content:center;padding:24px;z-index:9999;">
+        <div style="background:#fff;border-radius:18px;padding:28px 24px;max-width:420px;width:100%;text-align:center;">
+          <div style="font-size:40px;margin-bottom:12px;">🔧</div>
+          <div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:#1A2E44;margin-bottom:8px;">Firebase Not Configured</div>
+          <p style="font-size:14px;color:#7A92A8;line-height:1.7;margin-bottom:16px;">
+            Open this HTML file and replace the placeholder values inside <code style="background:#f0f4f8;padding:2px 6px;border-radius:4px;">firebaseConfig</code> with your real Firebase project keys.
+          </p>
+          <div style="background:#f0f4f8;border-radius:10px;padding:12px 14px;text-align:left;font-size:12px;font-family:monospace;color:#1A2E44;line-height:2;">
+            apiKey: "your-real-key"<br>
+            authDomain: "your-project.firebaseapp.com"<br>
+            projectId: "your-project-id"
+          </div>
+          <p style="font-size:12px;color:#7A92A8;margin-top:12px;">Get these from: Firebase Console → Project Settings → Your Apps → Web App</p>
+        </div>
+      </div>`);
+  });
+  // Stop execution — don't init Firebase with placeholder keys
+  throw new Error('Firebase config not set. Please paste your real config values.');
+}
+
 firebase.initializeApp(firebaseConfig);
 const auth    = firebase.auth();
 const db      = firebase.firestore();
@@ -1296,49 +1392,148 @@ const S = {
   settings:     { pC:10, pQ:5, pP:3, pS:2 },
 };
 
+function showLoading() {
+  const el = document.getElementById('loading-overlay');
+  if (el) { el.classList.remove('hidden'); }
+}
+
+// Live batch listener — starts immediately on page load (before auth).
+// Uses onSnapshot so any batch the admin creates/activates appears on ALL
+// devices (including the signup dropdown) within seconds, no refresh needed.
+// NOTE: Your Firestore rules must allow unauthenticated reads of /batches.
+// Add this rule in Firebase Console → Firestore → Rules (see SOP for details).
+let _batchUnsub = null;
+function startBatchListener() {
+  if (_batchUnsub) return; // already listening
+  _batchUnsub = db.collection('batches').where('status','==','active')
+    .onSnapshot(snap => {
+      snap.forEach(doc => { S.batches[doc.id] = { id: doc.id, ...doc.data() }; });
+      // If signup form is currently open, refresh the dropdown live
+      const sel = document.getElementById('p-batch');
+      if (sel && sel.closest('#form-psignup') &&
+          document.getElementById('form-psignup').style.display !== 'none') {
+        populateBatchDropdown();
+      }
+    }, err => {
+      console.warn('Batch listener error (check Firestore rules):', err.code);
+    });
+}
+startBatchListener();
+
+function populateBatchDropdown() {
+  const sel = document.getElementById('p-batch');
+  if (!sel) return;
+  const batches = Object.values(S.batches).filter(b => b.status === 'active');
+  sel.innerHTML = '<option value="">Choose your batch…</option>';
+  if (batches.length === 0) {
+    sel.innerHTML += '<option value="" disabled>No batches available yet — contact your admin</option>';
+  } else {
+    batches.forEach(b => {
+      sel.innerHTML += `<option value="${b.id}">${b.name}${b.institution ? ' — ' + b.institution : ''}</option>`;
+    });
+  }
+}
+
 // ─────────────────────────────────────────────────────────────
-// BOOT — Firebase Auth observer runs on every page load
+// BOOT — show splash immediately, then let Firebase auth decide
 // ─────────────────────────────────────────────────────────────
-auth.onAuthStateChanged(async (fbUser) => {
-  if (!fbUser) {
-    hideLoading();
-    showScreen('splash');
-    return;
-  }
 
-  S.fbUser = fbUser;
+// Show splash right away — don't wait for Firebase.
+// The loading overlay only appears during active sign-in/data-load transitions.
+showScreen('splash');
 
-  // Check if admin
-  const adminDoc = await db.collection('admins').doc(fbUser.uid).get().catch(() => null);
-  if (adminDoc && adminDoc.exists) {
-    S.role = 'admin';
-    await loadAdminData();
-    hideLoading();
-    loadAdminDash();
-    showScreen('admin');
-    return;
-  }
-
-  // Participant flow
-  const partDoc = await db.collection('participants').doc(fbUser.uid).get();
-  if (!partDoc.exists) {
-    // New user — needs to register details
-    hideLoading();
-    showSignup('participant');
-    // Pre-fill email
-    document.getElementById('p-email').value = fbUser.email || '';
-    return;
-  }
-
-  S.user = partDoc.data();
-  S.role = 'participant';
-  await loadCampaignData(S.user.batchId);
+// Safety net: if onAuthStateChanged hasn't fired within 8 seconds
+// (e.g. network issue, wrong config that passed validation), force splash.
+const _authTimeout = setTimeout(() => {
   hideLoading();
-  await loadPDash();
-  showScreen('participant');
+  showScreen('splash');
+  console.warn('Auth timeout — Firebase took too long to respond.');
+}, 8000);
 
-  // Subscribe to real-time updates for config changes
-  subscribeToConfig(S.user.batchId);
+auth.onAuthStateChanged(async (fbUser) => {
+  clearTimeout(_authTimeout); // Firebase responded — cancel the safety timeout
+  // ALWAYS hide loading at the end — wrapped in try/finally so spinner
+  // never gets stuck regardless of Firestore errors or permission issues.
+  try {
+    if (!fbUser) {
+      showScreen('splash');
+      return;
+    }
+
+    S.fbUser = fbUser;
+    // User is logged in — show loading while we fetch their data
+    showLoading();
+
+    // ── Check if admin ──────────────────────────────────────────
+    let adminDoc = null;
+    try {
+      adminDoc = await db.collection('admins').doc(fbUser.uid).get();
+    } catch(e) {
+      // Firestore rules may reject — treat as non-admin
+      console.warn('Admin check failed:', e.code);
+    }
+    if (adminDoc && adminDoc.exists) {
+      S.role = 'admin';
+      try {
+        await loadAdminData();
+      } catch(e) {
+        console.warn('loadAdminData error:', e.code, e.message);
+        toast('⚠️ Could not load all admin data: ' + (e.code || e.message));
+      }
+      loadAdminDash();
+      showScreen('admin');
+      return;
+    }
+
+    // ── Participant flow ────────────────────────────────────────
+    let partDoc = null;
+    try {
+      partDoc = await db.collection('participants').doc(fbUser.uid).get();
+    } catch(e) {
+      console.error('Participant read error:', e.code, e.message);
+      // Likely a Firestore rules issue — show helpful error and go to splash
+      toast('❌ Could not load your profile. Check Firestore rules. (' + (e.code || e.message) + ')');
+      await auth.signOut().catch(()=>{});
+      S.fbUser = null;
+      showScreen('splash');
+      return;
+    }
+
+    if (!partDoc || !partDoc.exists) {
+      // New user authenticated but no Firestore profile yet — show signup form
+      // (or survey modal is already open post-registration — let it handle routing)
+      if (S._surveyShown) return; // survey modal is handling the flow
+      showSignup('participant');
+      const emailField = document.getElementById('p-email');
+      if (emailField) emailField.value = fbUser.email || '';
+      return;
+    }
+
+    S.user = { ...partDoc.data(), uid: fbUser.uid };
+    S.role = 'participant';
+
+    try {
+      await loadCampaignData(S.user.batchId);
+    } catch(e) {
+      console.warn('loadCampaignData error:', e.code, e.message);
+      // Non-fatal — proceed to dashboard with whatever data loaded
+    }
+
+    await loadPDash();
+    showScreen('participant');
+
+    // Subscribe to real-time batch updates for cross-device sync
+    subscribeToConfig(S.user.batchId);
+
+  } catch(e) {
+    // Catch-all: something unexpected failed — always show splash, never hang
+    console.error('Auth state error:', e);
+    toast('❌ Sign-in error: ' + (e.message || e.code || 'Unknown error'));
+    showScreen('splash');
+  } finally {
+    // ALWAYS hide the loading overlay no matter what happened above
+    hideLoading();
+  }
 });
 
 function hideLoading() {
@@ -1380,14 +1575,21 @@ async function loadAdminData() {
   partSnap.forEach(doc => S.participants.push({ id: doc.id, ...doc.data() }));
 }
 
-// Subscribe to config doc — when admin changes active task/week, all open portals update
+// Subscribe to batch doc — when admin advances task/week or changes any batch
+// setting, ALL devices with this portal open will update within seconds.
 function subscribeToConfig(batchId) {
-  db.collection('batches').doc(batchId).onSnapshot(doc => {
+  db.collection('batches').doc(batchId).onSnapshot(async doc => {
     if (!doc.exists) return;
     const data = doc.data();
+    const prev = S.batches[batchId] || {};
     S.batches[batchId] = { id: batchId, ...data };
-    // Silently refresh the participant dashboard
-    if (S.user && S.role === 'participant') loadPDash();
+    if (S.user && S.role === 'participant') {
+      // If activeTask or activeWeek changed, reload full campaign data
+      if (prev.activeTask !== data.activeTask || prev.activeWeek !== data.activeWeek) {
+        await loadCampaignData(batchId);
+      }
+      loadPDash();
+    }
   });
 }
 
@@ -1414,27 +1616,26 @@ async function logout() {
 function showSignup(role) {
   S.role = role;
   showScreen('signup');
-  ['form-psignup','form-plogin','form-admin'].forEach(id => document.getElementById(id).style.display='none');
+  ['form-psignup','form-plogin','form-admin','form-forgot','form-admin-forgot'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
   const authTitle = document.getElementById('auth-title');
   const authDesc  = document.getElementById('auth-desc');
   if (role === 'participant') {
     document.getElementById('form-psignup').style.display = 'block';
     authTitle.textContent = 'Join the Program';
     authDesc.textContent  = 'Start your mindfulness journey';
-    // Populate batch dropdown
-    const sel = document.getElementById('p-batch');
-    sel.innerHTML = '<option value="">Choose your batch…</option>';
-    Object.values(S.batches).filter(b => b.status === 'active').forEach(b => {
-      sel.innerHTML += `<option value="${b.id}">${b.name} — ${b.institution||''}</option>`;
-    });
-    // If batches not loaded yet, load them
-    if (!Object.keys(S.batches).length) {
+    // Populate from live cache (updated by onSnapshot in real time)
+    populateBatchDropdown();
+    // If cache is empty, trigger a fresh fetch (handles first load race condition)
+    if (Object.keys(S.batches).length === 0) {
+      const sel = document.getElementById('p-batch');
+      sel.innerHTML = '<option value="">Loading batches…</option>';
       db.collection('batches').where('status','==','active').get().then(snap => {
-        snap.forEach(doc => {
-          const b = { id: doc.id, ...doc.data() };
-          S.batches[doc.id] = b;
-          sel.innerHTML += `<option value="${b.id}">${b.name} — ${b.institution||''}</option>`;
-        });
+        snap.forEach(doc => { S.batches[doc.id] = { id: doc.id, ...doc.data() }; });
+        populateBatchDropdown();
+      }).catch(e => {
+        document.getElementById('p-batch').innerHTML =
+          '<option value="">Could not load batches — check connection</option>';
+        console.error('Batch load error:', e.code, e.message);
       });
     }
   } else {
@@ -1445,7 +1646,7 @@ function showSignup(role) {
 }
 
 function showPLogin() {
-  ['form-psignup','form-plogin','form-admin','form-forgot'].forEach(id => {
+  ['form-psignup','form-plogin','form-admin','form-forgot','form-admin-forgot'].forEach(id => {
     const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
   document.getElementById('form-plogin').style.display  = 'block';
@@ -1453,7 +1654,7 @@ function showPLogin() {
   document.getElementById('auth-desc').textContent  = 'Sign in to your account';
 }
 function showForgotPassword() {
-  ['form-psignup','form-plogin','form-admin','form-forgot'].forEach(id => {
+  ['form-psignup','form-plogin','form-admin','form-forgot','form-admin-forgot'].forEach(id => {
     const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
   document.getElementById('form-forgot').style.display = 'block';
@@ -1461,7 +1662,7 @@ function showForgotPassword() {
   document.getElementById('auth-desc').textContent  = 'We will email you a reset link';
 }
 function showPSignup() {
-  ['form-psignup','form-plogin','form-admin','form-forgot'].forEach(id => {
+  ['form-psignup','form-plogin','form-admin','form-forgot','form-admin-forgot'].forEach(id => {
     const el = document.getElementById(id); if (el) el.style.display = 'none';
   });
   document.getElementById('form-psignup').style.display = 'block';
@@ -1472,16 +1673,26 @@ function showPSignup() {
 async function participantLogin() {
   const email = _v('pl-email'), pass = _v('pl-pass');
   if (!email || !pass) { toast('⚠️ Enter email and password'); return; }
+  showLoading();
   try {
     await auth.signInWithEmailAndPassword(email, pass);
-    // onAuthStateChanged handles the rest
+    // onAuthStateChanged handles navigation
   } catch(e) {
-    if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
-      toast('❌ No account found. Please register first.');
-    } else if (e.code === 'auth/wrong-password') {
-      toast('❌ Wrong password. Try again or reset your password.');
+    hideLoading();
+    const code = e.code || '';
+    if (code === 'auth/user-not-found' || code === 'auth/invalid-email') {
+      toast('❌ No account found with this email. Please register first.');
+    } else if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+      toast('❌ Incorrect password. Try again or use Forgot Password below.');
+    } else if (code === 'auth/too-many-requests') {
+      toast('❌ Too many attempts. Try again later or reset your password.');
+    } else if (code === 'auth/network-request-failed') {
+      toast('❌ Network error — check your internet connection.');
+    } else if (code.includes('api-key') || code === 'auth/configuration-not-found') {
+      toast('❌ Firebase not configured. Contact admin.');
     } else {
-      toast('❌ ' + (e.message || 'Sign-in failed'));
+      toast('❌ Sign-in error: ' + (e.message || code));
+      console.error('Login error:', e);
     }
   }
 }
@@ -1498,17 +1709,331 @@ async function sendPasswordReset() {
   }
 }
 
-// Admin Google Sign-in
-async function adminGoogleLogin() {
-  const provider = new firebase.auth.GoogleAuthProvider();
+// Admin Email + Password Sign-in
+async function adminLogin() {
+  const email = _v('a-email'), pass = _v('a-pass');
+  if (!email || !pass) { toast('⚠️ Enter admin email and password'); return; }
+  showLoading();
   try {
-    await auth.signInWithPopup(provider);
-    // onAuthStateChanged handles the rest
+    await auth.signInWithEmailAndPassword(email, pass);
+    // onAuthStateChanged checks if this uid is in the admins collection
   } catch(e) {
-    if (e.code !== 'auth/popup-closed-by-user') toast('❌ Sign-in failed: ' + e.message);
+    hideLoading();
+    const code = e.code || '';
+    if (code === 'auth/user-not-found' || code === 'auth/invalid-email') {
+      toast('❌ No admin account found with this email.');
+    } else if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+      toast('❌ Incorrect password. Use "Forgot password?" to reset.');
+    } else if (code === 'auth/too-many-requests') {
+      toast('❌ Account locked due to too many attempts. Reset your password.');
+    } else if (code === 'auth/network-request-failed') {
+      toast('❌ No internet connection. Check your network.');
+    } else {
+      toast('❌ Sign-in failed: ' + (e.message || code));
+      console.error('Admin login error:', e);
+    }
   }
 }
 
+async function sendAdminReset() {
+  const email = _v('a-forgot-email');
+  if (!email) { toast('⚠️ Enter your admin email address'); return; }
+  try {
+    await auth.sendPasswordResetEmail(email);
+    toast('✉️ Reset link sent! Check your inbox.');
+    showAdminLogin();
+  } catch(e) {
+    toast('❌ Could not send reset email: ' + (e.message || e.code));
+  }
+}
+
+function showAdminForgot() {
+  ['form-psignup','form-plogin','form-admin','form-forgot','form-admin-forgot'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  document.getElementById('form-admin-forgot').style.display = 'block';
+  document.getElementById('auth-title').textContent = 'Reset Admin Password';
+  document.getElementById('auth-desc').textContent  = 'We will email you a reset link';
+}
+
+function showAdminLogin() {
+  ['form-psignup','form-plogin','form-admin','form-forgot','form-admin-forgot'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  document.getElementById('form-admin').style.display = 'block';
+  document.getElementById('auth-title').textContent = 'Admin Login';
+  document.getElementById('auth-desc').textContent  = 'Manage the Yes! I Am Mindful campaign';
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// SURVEY — render inline survey on signup form & collect answers
+// Loads questions from Firestore surveyQuestions collection.
+// Saves answers to Firestore /surveys/{uid} on account creation.
+// ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// SURVEY MODAL — shown post-signup as a full-screen popup
+// Loads questions from Firestore surveyQuestions.
+// Saves answers to /surveys/{uid} then routes to dashboard.
+// ─────────────────────────────────────────────────────────────
+async function openSurveyModal() {
+  S._surveyShown = true;
+  const modal = document.getElementById('survey-modal');
+  const body  = document.getElementById('survey-modal-body');
+  modal.classList.add('open');
+  body.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--muted);font-size:14px;">Loading survey questions…</div>';
+
+  try {
+    const snap = await db.collection('surveyQuestions').orderBy('order','asc').get();
+    if (snap.empty) {
+      // No questions — skip straight to dashboard
+      skipSurveyModal();
+      return;
+    }
+    const questions = [];
+    snap.forEach(doc => questions.push({ id: doc.id, ...doc.data() }));
+    S._surveyQuestions = questions;
+
+    // Progress label
+    document.getElementById('survey-progress-lbl').textContent = questions.length + ' Qs';
+    document.getElementById('survey-prog-fill').style.width = '0%';
+
+    body.innerHTML = questions.map((q, idx) => {
+      const qid = 'smq_' + q.id;
+      let input = '';
+      const opts = q.opts || q.options || [];
+
+      if (q.type === 'radio' || q.type === 'multiple_choice') {
+        input = opts.map(o => `
+          <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:6px;background:var(--off-white);border-radius:10px;cursor:pointer;font-size:14px;border:1.5px solid var(--border);transition:border-color 0.15s;" onclick="this.style.borderColor='var(--navy)'">
+            <input type="radio" name="${qid}" value="${o}" style="accent-color:var(--navy);width:16px;height:16px;flex-shrink:0;" onchange="updateSurveyProgress()">
+            <span>${o}</span>
+          </label>`).join('');
+      } else if (q.type === 'yes_no') {
+        input = ['Yes','No'].map(o => `
+          <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:6px;background:var(--off-white);border-radius:10px;cursor:pointer;font-size:14px;border:1.5px solid var(--border);transition:border-color 0.15s;" onclick="this.style.borderColor='var(--navy)'">
+            <input type="radio" name="${qid}" value="${o}" style="accent-color:var(--navy);width:16px;height:16px;flex-shrink:0;" onchange="updateSurveyProgress()">
+            <span>${o}</span>
+          </label>`).join('');
+      } else if (q.type === 'scale') {
+        const max = q.max || 5;
+        input = `
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+            ${Array.from({length: max}, (_,i) => `
+              <label style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1;min-width:40px;">
+                <input type="radio" name="${qid}" value="${i+1}" style="accent-color:var(--navy);width:18px;height:18px;" onchange="updateSurveyProgress()">
+                <span style="font-size:12px;color:var(--muted);font-weight:600;">${i+1}</span>
+              </label>`).join('')}
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span style="font-size:11px;color:var(--muted);">${q.minLabel||'Low'}</span>
+            <span style="font-size:11px;color:var(--muted);">${q.maxLabel||'High'}</span>
+          </div>`;
+      } else if (q.type === 'checkbox') {
+        input = opts.map(o => `
+          <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:6px;background:var(--off-white);border-radius:10px;cursor:pointer;font-size:14px;border:1.5px solid var(--border);">
+            <input type="checkbox" name="${qid}" value="${o}" style="accent-color:var(--navy);width:16px;height:16px;flex-shrink:0;" onchange="updateSurveyProgress()">
+            <span>${o}</span>
+          </label>`).join('');
+      } else {
+        // text / default
+        input = `<textarea name="${qid}" id="${qid}" rows="3" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;resize:vertical;font-family:inherit;margin-top:4px;" placeholder="Your answer…" oninput="updateSurveyProgress()"></textarea>`;
+      }
+
+      return `
+        <div class="survey-q-block" data-qid="${q.id}" style="margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Q${idx+1} of ${questions.length}</div>
+          <div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:10px;line-height:1.5;">${q.label || q.question || ''}</div>
+          ${input}
+        </div>`;
+    }).join('') +
+    '<div style="height:8px;"></div>'; // bottom breathing room
+
+    updateSurveyProgress();
+  } catch(e) {
+    console.warn('Survey load error:', e.code, e.message);
+    // On permission error, show clear message with skip option
+    body.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;">
+        <div style="font-size:40px;margin-bottom:16px;">⚠️</div>
+        <div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px;">Survey questions could not load</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">Error: ${e.code || e.message}<br>You can skip the survey and go straight to your dashboard.</div>
+      </div>`;
+    document.getElementById('survey-submit-btn').style.display = 'none';
+  }
+}
+
+function updateSurveyProgress() {
+  const questions = S._surveyQuestions || [];
+  if (!questions.length) return;
+  let answered = 0;
+  questions.forEach(q => {
+    const qid = 'smq_' + q.id;
+    if (q.type === 'radio' || q.type === 'multiple_choice' || q.type === 'yes_no' || q.type === 'scale') {
+      if (document.querySelector(`input[name="${qid}"]:checked`)) answered++;
+    } else if (q.type === 'checkbox') {
+      if (document.querySelector(`input[name="${qid}"]:checked`)) answered++;
+    } else {
+      const el = document.getElementById(qid);
+      if (el && el.value.trim()) answered++;
+    }
+  });
+  const pct = Math.round((answered / questions.length) * 100);
+  document.getElementById('survey-prog-fill').style.width = pct + '%';
+  document.getElementById('survey-progress-lbl').textContent = answered + '/' + questions.length;
+}
+
+function collectSurveyAnswers() {
+  const questions = S._surveyQuestions || [];
+  const answers = {};
+  questions.forEach(q => {
+    const qid = 'smq_' + q.id;
+    if (q.type === 'radio' || q.type === 'multiple_choice' || q.type === 'yes_no' || q.type === 'scale') {
+      const checked = document.querySelector(`input[name="${qid}"]:checked`);
+      if (checked) answers[q.id] = checked.value;
+    } else if (q.type === 'checkbox') {
+      const checked = document.querySelectorAll(`input[name="${qid}"]:checked`);
+      if (checked.length) answers[q.id] = Array.from(checked).map(c => c.value);
+    } else {
+      const el = document.getElementById(qid);
+      if (el && el.value.trim()) answers[q.id] = el.value.trim();
+    }
+  });
+  return answers;
+}
+
+async function submitSurveyModal() {
+  const btn = document.getElementById('survey-submit-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+  const uid   = S._pendingSurveyUid;
+  const name  = S._pendingSurveyName;
+  const email = S._pendingSurveyEmail;
+  const batchId = S._pendingSurveyBatch;
+
+  try {
+    const answers = collectSurveyAnswers();
+    if (uid && Object.keys(answers).length > 0) {
+      await db.collection('surveys').doc(uid).set({
+        uid, name, email, batchId,
+        answers,
+        submittedAt: FieldValue.serverTimestamp(),
+      });
+    }
+  } catch(e) {
+    console.warn('Survey save error:', e.code, e.message);
+    // Non-fatal — proceed to dashboard anyway
+  }
+
+  closeSurveyAndGoToDashboard();
+}
+
+function skipSurveyModal() {
+  closeSurveyAndGoToDashboard();
+}
+
+async function closeSurveyAndGoToDashboard() {
+  document.getElementById('survey-modal').classList.remove('open');
+  S._surveyShown = false;
+  showLoading();
+  try {
+    const uid = S._pendingSurveyUid || (S.fbUser && S.fbUser.uid);
+    if (!uid) { hideLoading(); showScreen('splash'); return; }
+    const partDoc = await db.collection('participants').doc(uid).get();
+    if (!partDoc.exists) { hideLoading(); showScreen('splash'); return; }
+    S.user = { ...partDoc.data(), uid };
+    S.role = 'participant';
+    await loadCampaignData(S.user.batchId);
+    await loadPDash();
+    showScreen('participant');
+    subscribeToConfig(S.user.batchId);
+  } catch(e) {
+    console.error('Post-survey routing error:', e);
+    toast('⚠️ ' + (e.message || e.code));
+  } finally {
+    hideLoading();
+  }
+}
+    const questions = [];
+    snap.forEach(doc => questions.push({ id: doc.id, ...doc.data() }));
+    S._surveyQuestions = questions;
+
+// ─────────────────────────────────────────────────────────────
+// AUTH — Participant Registration (CREATE ACCOUNT)
+// Creates Firebase Auth account + Firestore participant document
+// ─────────────────────────────────────────────────────────────
+async function registerParticipant() {
+  const name    = _v('p-name');
+  const email   = _v('p-email');
+  const mobile  = _v('p-mobile');
+  const inst    = _v('p-inst');
+  const batchId = _v('p-batch');
+  const pass    = _v('p-pass');
+
+  // Validation
+  if (!name)    { toast('⚠️ Please enter your full name');        return; }
+  if (!email)   { toast('⚠️ Please enter your email address');    return; }
+  if (!batchId) { toast('⚠️ Please select a batch');             return; }
+  if (!pass || pass.length < 6) { toast('⚠️ Password must be at least 6 characters'); return; }
+
+  const btn = document.getElementById('btn-register');
+  if (btn) btn.disabled = true;
+  showLoading();
+
+  try {
+    // Step 1 — Create Firebase Auth account (email + password)
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    const uid  = cred.user.uid;
+
+    // Step 2 — Save participant profile to Firestore
+    const batch = S.batches[batchId] || {};
+    await db.collection('participants').doc(uid).set({
+      uid,
+      name,
+      email,
+      mobile:      mobile || '',
+      institution: inst   || '',
+      batchId,
+      batchName:   batch.name || '',
+      points:          0,
+      tasksCompleted:  0,
+      streak:          0,
+      joinedAt:        FieldValue.serverTimestamp(),
+      lastActive:      FieldValue.serverTimestamp(),
+    });
+
+    // Step 3 — Store uid for survey submission, then show survey modal
+    // (onAuthStateChanged will fire but we intercept with a flag)
+    S._pendingSurveyUid   = uid;
+    S._pendingSurveyName  = name;
+    S._pendingSurveyEmail = email;
+    S._pendingSurveyBatch = batchId;
+    S._surveyShown        = false;
+
+    hideLoading();
+    if (btn) btn.disabled = false;
+    toast('🎉 Account created! Welcome to the program.');
+    openSurveyModal();
+  } catch(e) {
+    hideLoading();
+    if (btn) btn.disabled = false;
+    const code = e.code || '';
+    if (code === 'auth/email-already-in-use') {
+      toast('❌ This email is already registered. Use Sign In instead.');
+    } else if (code === 'auth/invalid-email') {
+      toast('❌ Invalid email address. Please check and try again.');
+    } else if (code === 'auth/weak-password') {
+      toast('❌ Password too weak. Use at least 6 characters.');
+    } else if (code === 'auth/network-request-failed') {
+      toast('❌ No internet connection. Check your network and try again.');
+    } else if (code.includes('api-key') || code === 'auth/configuration-not-found') {
+      toast('❌ Firebase not configured. Paste your config keys in the HTML file.');
+    } else {
+      toast('❌ Registration error: ' + (e.message || code));
+      console.error('Registration error:', e);
+    }
+  }
+}
 
 // ─────────────────────────────────────────────────────────────
 // PARTICIPANT DASHBOARD
@@ -1538,17 +2063,10 @@ async function loadPDash() {
   document.getElementById('p-prog-fill').style.width = pct + '%';
   document.getElementById('p-prog-lbl').textContent  = (pu.tasksCompleted || 0) + '/40 tasks';
 
-  // Theme
+  // Theme (text only)
   document.getElementById('p-week-badge-label').textContent = 'Week ' + aw;
   document.getElementById('p-theme-title').textContent = theme ? theme.title : 'Mindfulness Week';
   document.getElementById('p-theme-msg').textContent   = theme && theme.message ? theme.message : '';
-  if (theme && theme.imageUrl) {
-    tiw.className = 'theme-img-frame';
-    tiw.innerHTML = `<img src="${theme.imageUrl}" alt="${theme.title||'Theme'}" style="width:100%;height:100%;object-fit:contain;display:block;" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder-box\\'><div class=\\'ph-icon\\'>⛰️</div></div>'">`;
-  } else {
-    tiw.className = 'theme-img-frame';
-    tiw.innerHTML = '<div class=\'img-placeholder-box\'><div class=\'ph-icon\'>⛰️</div><div class=\'ph-text\'>Weekly theme image will appear here</div></div>';
-  }
 
   // Stats
   const badges = [[0,'🌱'],[5,'🌿'],[10,'🍃'],[20,'🌳'],[30,'⭐'],[40,'🏆']];
@@ -1666,27 +2184,100 @@ function updateTaskFlow() {
   area.innerHTML = '<button class="act-btn full gold" onclick="markComplete()">✅ Step 4: Mark Task Complete</button>';
 }
 
+// ─────────────────────────────────────────────────────────────
+// LEADERBOARD — KPI summary + 4 tabs: Points / Tasks / Polls / Streak
+// ─────────────────────────────────────────────────────────────
+let _lbCurrentTab = 'points';
+let _lbParticipants = [];
+
 async function renderPLB(batchId) {
-  const snap = await db.collection('participants').where('batchId','==',batchId).orderBy('points','desc').limit(10).get();
   const myId = S.fbUser ? S.fbUser.uid : '';
+  const batch = S.batches[batchId] || {};
+  document.getElementById('lb-batch-name').textContent = (batch.name || 'Your Batch') + ' Rankings';
+
+  // Update personal KPI strip
+  const me = S.user || {};
+  document.getElementById('kpi-tasks').textContent = me.tasksCompleted || 0;
+  document.getElementById('kpi-pts').textContent   = me.points || 0;
+
+  // Count polls completed for current user
+  try {
+    const pollSnap = await db.collection('participants').doc(myId)
+      .collection('completions').where('action','==','POLL').get();
+    document.getElementById('kpi-polls').textContent = pollSnap.size || 0;
+  } catch(e) { document.getElementById('kpi-polls').textContent = '—'; }
+
+  // Fetch all participants in batch
+  try {
+    const snap = await db.collection('participants')
+      .where('batchId','==',batchId)
+      .orderBy('points','desc')
+      .limit(50)
+      .get();
+
+    _lbParticipants = [];
+    snap.forEach(doc => _lbParticipants.push({ id: doc.id, ...doc.data() }));
+
+    // My rank by points
+    const myRankIdx = _lbParticipants.findIndex(p => p.id === myId);
+    document.getElementById('kpi-rank').textContent =
+      myRankIdx >= 0 ? '#' + (myRankIdx + 1) : '—';
+
+    renderLBTab(_lbCurrentTab, myId);
+  } catch(e) {
+    document.getElementById('p-lb-list').innerHTML =
+      '<p style="padding:20px;text-align:center;color:var(--muted);">Could not load rankings: ' + (e.code || e.message) + '</p>';
+  }
+}
+
+function switchLBTab(tab, btn) {
+  _lbCurrentTab = tab;
+  document.querySelectorAll('.lb-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const myId = S.fbUser ? S.fbUser.uid : '';
+  renderLBTab(tab, myId);
+}
+
+function renderLBTab(tab, myId) {
+  const list = [..._lbParticipants];
   const rankIco = ['🥇','🥈','🥉'];
   const rankClass = ['r1','r2','r3'];
+
+  const sortKey   = { points:'points', tasks:'tasksCompleted', polls:'pollsCompleted', streak:'streak' }[tab] || 'points';
+  const metricLbl = { points:'pts', tasks:'tasks done', polls:'polls', streak:'day streak' }[tab] || 'pts';
+  const metricIco = { points:'🏅', tasks:'✅', polls:'📊', streak:'🔥' }[tab] || '🏅';
+
+  list.sort((a,b) => (b[sortKey]||0) - (a[sortKey]||0));
+
+  if (list.length === 0) {
+    document.getElementById('p-lb-list').innerHTML =
+      '<p style="padding:24px;text-align:center;color:var(--muted);">No participants yet in this batch</p>';
+    return;
+  }
+
   let html = '';
-  let i = 0;
-  snap.forEach(doc => {
-    const p = doc.data();
-    html += `<div class="lb-item ${doc.id===myId?'mine':''}">
-      <div class="lb-rank ${rankClass[i]||''}">${rankIco[i]||i+1}</div>
-      <div class="lb-av ${i===0?'gold-av':''}">${(p.name||'?')[0].toUpperCase()}</div>
-      <div class="lb-info"><div class="lb-name">${p.name}${doc.id===myId?' <span style="color:var(--gold-dim);font-size:11px;font-weight:700;">(You)</span>':''}</div><div class="lb-batch">${(S.batches[p.batchId]||{}).name||''}</div></div>
-      <div><div class="lb-pts">${p.points||0}</div><div class="lb-pts-lbl">pts</div></div>
-    </div>`;
-    i++;
+  list.forEach((p, i) => {
+    const val  = p[sortKey] || 0;
+    const isMe = p.id === myId;
+    const badges = [[0,'🌱'],[5,'🌿'],[10,'🍃'],[20,'🌳'],[30,'⭐'],[40,'🏆']];
+    let badge = '🌱';
+    for (const [t,b] of badges) { if ((p.tasksCompleted||0) >= t) badge = b; }
+    html += '<div class="lb-item ' + (isMe?'mine':'') + '">' +
+      '<div class="lb-rank ' + (rankClass[i]||'') + '">' + (rankIco[i] || (i+1)) + '</div>' +
+      '<div class="lb-av ' + (i===0?'gold-av':'') + '">' + (p.name||'?')[0].toUpperCase() + '</div>' +
+      '<div class="lb-info">' +
+        '<div class="lb-name">' + (p.name||'—') + (isMe?' <span style="color:var(--gold-dim);font-size:10px;font-weight:700;">(You)</span>':'') + '</div>' +
+        '<div class="lb-sub">' + badge + ' ' + ((S.batches[p.batchId]||{}).name||'') + '</div>' +
+      '</div>' +
+      '<div class="lb-val-wrap">' +
+        '<div class="lb-pts">' + metricIco + ' ' + val + '</div>' +
+        '<div class="lb-pts-lbl">' + metricLbl + '</div>' +
+      '</div>' +
+    '</div>';
   });
-  document.getElementById('p-lb-list').innerHTML = html || '<p style="padding:20px;text-align:center;color:var(--muted);">No participants yet</p>';
-  const batch = S.batches[batchId];
-  document.getElementById('lb-batch-name').textContent = batch ? batch.name + ' Rankings' : 'Rankings';
+  document.getElementById('p-lb-list').innerHTML = html;
 }
+
 
 function showPView(v, btn) {
   document.querySelectorAll('.p-view').forEach(x => x.classList.remove('active'));
