@@ -670,15 +670,15 @@ body {
 
         <!-- PARTICIPANT SIGNUP -->
         <div id="form-psignup">
-          <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="p-name" placeholder="Your full name"></div>
-          <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" id="p-email" placeholder="you@example.com"></div>
-          <div class="form-group"><label class="form-label">Mobile Number</label><input type="tel" class="form-input" id="p-mobile" placeholder="+91 9999 999 999"></div>
-          <div class="form-group"><label class="form-label">Institution / Organisation</label><input type="text" class="form-input" id="p-inst" placeholder="Your institution"></div>
+          <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="p-name" placeholder="Your full name" autocomplete="name"></div>
+          <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" id="p-email" placeholder="you@example.com" autocomplete="email"></div>
+          <div class="form-group"><label class="form-label">Mobile Number</label><input type="tel" class="form-input" id="p-mobile" placeholder="+91 9999 999 999" autocomplete="tel"></div>
+          <div class="form-group"><label class="form-label">Institution / Organisation</label><input type="text" class="form-input" id="p-inst" placeholder="Your institution" autocomplete="organization"></div>
           <div class="form-group">
             <label class="form-label">Select Batch</label>
             <select class="form-select" id="p-batch"><option value="">Choose your batch…</option></select>
           </div>
-          <div class="form-group"><label class="form-label">Create Password</label><input type="password" class="form-input" id="p-pass" placeholder="Min 6 characters"></div>
+          <div class="form-group"><label class="form-label">Create Password</label><input type="password" class="form-input" id="p-pass" placeholder="Min 6 characters" autocomplete="new-password"></div>
           <button class="btn-primary btn-gold" onclick="registerParticipant()" id="btn-register">Create Account ›</button>
           <div class="auth-switch">Already joined? <a onclick="showPLogin()">Sign In</a></div>
         </div>
@@ -1392,6 +1392,8 @@ const S = {
   settings:     { pC:10, pQ:5, pP:3, pS:2 },
 };
 
+let _tt; // toast timer — declared here to avoid TDZ crash when toast() is called early
+
 function showLoading() {
   const el = document.getElementById('loading-overlay');
   if (el) { el.classList.remove('hidden'); }
@@ -1569,10 +1571,25 @@ async function loadCampaignData(batchId) {
 
 async function loadAdminData() {
   await loadCampaignData();
-  // Load all participants for admin view
+  // Load participants once for initial render
   const partSnap = await db.collection('participants').get();
   S.participants = [];
   partSnap.forEach(doc => S.participants.push({ id: doc.id, ...doc.data() }));
+
+  // Live listener — keeps admin participant list in sync as new people register
+  if (!S._partUnsub) {
+    S._partUnsub = db.collection('participants').onSnapshot(snap => {
+      S.participants = [];
+      snap.forEach(doc => S.participants.push({ id: doc.id, ...doc.data() }));
+      // If admin is currently viewing the participants panel, refresh it live
+      const panel = document.getElementById('panel-participants');
+      if (panel && panel.classList.contains('active')) {
+        renderParticipants();
+        // Update stats strip too
+        document.getElementById('s-participants').textContent = S.participants.length;
+      }
+    }, err => console.warn('Participant sync error:', err.code));
+  }
 }
 
 // Subscribe to batch doc — when admin advances task/week or changes any batch
@@ -1939,10 +1956,16 @@ async function closeSurveyAndGoToDashboard() {
   try {
     const uid = S._pendingSurveyUid || (S.fbUser && S.fbUser.uid);
     if (!uid) { hideLoading(); showScreen('splash'); return; }
+
+    // Reload fresh participant doc (just written during registration)
     const partDoc = await db.collection('participants').doc(uid).get();
     if (!partDoc.exists) { hideLoading(); showScreen('splash'); return; }
+
     S.user = { ...partDoc.data(), uid };
     S.role = 'participant';
+    S.fbUser = S.fbUser || auth.currentUser;
+
+    // Load all campaign data needed for dashboard
     await loadCampaignData(S.user.batchId);
     await loadPDash();
     showScreen('participant');
@@ -1950,8 +1973,10 @@ async function closeSurveyAndGoToDashboard() {
   } catch(e) {
     console.error('Post-survey routing error:', e);
     toast('⚠️ ' + (e.message || e.code));
+    showScreen('splash');
   } finally {
     hideLoading();
+    S._pendingSurveyUid = null;
   }
 }
     const questions = [];
@@ -1981,9 +2006,17 @@ async function registerParticipant() {
   showLoading();
 
   try {
+    // *** Set survey intercept flag FIRST — before creating auth account
+    // This ensures onAuthStateChanged sees the flag and doesn't auto-route to dashboard
+    S._surveyShown        = true;
+    S._pendingSurveyName  = name;
+    S._pendingSurveyEmail = email;
+    S._pendingSurveyBatch = batchId;
+
     // Step 1 — Create Firebase Auth account (email + password)
     const cred = await auth.createUserWithEmailAndPassword(email, pass);
     const uid  = cred.user.uid;
+    S._pendingSurveyUid = uid;
 
     // Step 2 — Save participant profile to Firestore
     const batch = S.batches[batchId] || {};
@@ -2002,19 +2035,16 @@ async function registerParticipant() {
       lastActive:      FieldValue.serverTimestamp(),
     });
 
-    // Step 3 — Store uid for survey submission, then show survey modal
-    // (onAuthStateChanged will fire but we intercept with a flag)
-    S._pendingSurveyUid   = uid;
-    S._pendingSurveyName  = name;
-    S._pendingSurveyEmail = email;
-    S._pendingSurveyBatch = batchId;
-    S._surveyShown        = false;
-
     hideLoading();
     if (btn) btn.disabled = false;
     toast('🎉 Account created! Welcome to the program.');
+
+    // Step 3 — Open survey modal (flag already set above)
     openSurveyModal();
   } catch(e) {
+    // Reset the survey flag if registration failed
+    S._surveyShown = false;
+    S._pendingSurveyUid = null;
     hideLoading();
     if (btn) btn.disabled = false;
     const code = e.code || '';
@@ -2530,6 +2560,15 @@ function showPanel(id, btn) {
   if (btn) btn.classList.add('active');
   else { const el = document.querySelector(`.a-nav-btn[onclick*="'${id}'"]`); if (el) el.classList.add('active'); }
   if (id === 'survey-config') refreshSurveyList();
+  // Always reload fresh participant data when switching to the participants tab
+  if (id === 'participants') {
+    db.collection('participants').get().then(snap => {
+      S.participants = [];
+      snap.forEach(doc => S.participants.push({ id: doc.id, ...doc.data() }));
+      renderParticipants();
+      document.getElementById('s-participants').textContent = S.participants.length;
+    }).catch(e => console.warn('Participants reload error:', e.code));
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -2996,7 +3035,6 @@ function exportCSV() {
 // ─────────────────────────────────────────────────────────────
 // TOAST, HELP, UTILS
 // ─────────────────────────────────────────────────────────────
-let _tt;
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
