@@ -226,9 +226,9 @@ body {
 .auth-switch a:hover { color:var(--gold-dim); }
 .back-link {
   text-align:center; margin-top:12px; font-size:13px;
-  color:rgba(255,255,255,0.5); cursor:pointer;
+  color:var(--muted); cursor:pointer;
 }
-.back-link:hover { color:var(--gold-light); }
+.back-link:hover { color:var(--navy); text-decoration:underline; }
 
 /* Password login - no magic link CSS needed */
 
@@ -658,7 +658,12 @@ body {
 
 <!-- AUTH -->
 <div id="screen-signup" class="screen">
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(150deg,var(--navy-deep) 0%,var(--navy) 100%)">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 24px 40px;background:linear-gradient(150deg,var(--navy-deep) 0%,var(--navy) 100%);gap:14px;">
+    <div style="width:100%;max-width:440px;">
+      <button onclick="goSplash()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.28);color:rgba(255,255,255,0.9);border-radius:20px;padding:7px 16px;font-size:13px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;transition:all 0.18s;"         onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">
+        ← Back to Home
+      </button>
+    </div>
     <div class="auth-card fade-in">
       <div class="auth-card-header">
         <div class="b4c-mini-logo"><img src="bridge4change-logo.png" class="auth-logo-img" alt="B4C" onerror="this.style.display='none'"></div>
@@ -675,7 +680,13 @@ body {
           <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="p-name" placeholder="Your full name" autocomplete="name"></div>
           <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" id="p-email" placeholder="you@example.com" autocomplete="email"></div>
           <div class="form-group"><label class="form-label">Mobile Number</label><input type="tel" class="form-input" id="p-mobile" placeholder="+91 9999 999 999" autocomplete="tel"></div>
-          <div class="form-group"><label class="form-label">Institution / Organisation</label><input type="text" class="form-input" id="p-inst" placeholder="Your institution" autocomplete="organization"></div>
+          <div class="form-group">
+            <label class="form-label">Institution / Organisation</label>
+            <select class="form-select" id="p-inst-sel" onchange="syncInstFromSelect()">
+              <option value="">Choose your institution…</option>
+            </select>
+            <input type="text" class="form-input" id="p-inst" placeholder="Or type your institution name" autocomplete="organization" style="margin-top:6px;display:none;">
+          </div>
           <div class="form-group">
             <label class="form-label">Select Batch</label>
             <select class="form-select" id="p-batch"><option value="">Choose your batch…</option></select>
@@ -723,7 +734,7 @@ body {
           <div class="auth-switch" style="margin-top:12px;"><a onclick="showAdminLogin()">← Back to Admin Login</a></div>
         </div>
 
-        <p class="back-link" onclick="goSplash()">← Back to Home</p>
+        <!-- back-link now shown above card on dark background -->
       </div>
     </div>
   </div>
@@ -1535,13 +1546,9 @@ auth.onAuthStateChanged(async (fbUser) => {
     }
     if (adminDoc && adminDoc.exists) {
       S.role = 'admin';
-      try {
-        await loadAdminData();
-      } catch(e) {
-        console.warn('loadAdminData error:', e.code, e.message);
-        toast('⚠️ Could not load all admin data: ' + (e.code || e.message));
-      }
-      loadAdminDash();
+      try { await loadAdminData(); } catch(e) { console.warn('loadAdminData:', e.code||e.message); }
+      try { loadAdminDash(); } catch(e) { console.warn('loadAdminDash:', e.message); }
+      hideLoading();
       showScreen('admin');
       return;
     }
@@ -1605,42 +1612,28 @@ function hideLoading() {
 // LOAD DATA
 // ─────────────────────────────────────────────────────────────
 async function loadCampaignData(batchId) {
-  // Load all batches
-  const batchSnap = await db.collection('batches').get();
-  batchSnap.forEach(doc => { S.batches[doc.id] = { id: doc.id, ...doc.data() }; });
-
-  // Load tasks
-  const taskSnap = await db.collection('tasks').get();
-  taskSnap.forEach(doc => { S.tasks[doc.id] = doc.data(); });
-
-  // Load themes
-  const themeSnap = await db.collection('themes').get();
-  themeSnap.forEach(doc => { S.themes[doc.id] = doc.data(); });
-
-  // Load quizzes + polls
-  const qSnap = await db.collection('quizzes').get();
-  qSnap.forEach(doc => { S.quizzes[doc.id] = doc.data(); });
-  const pSnap = await db.collection('polls').get();
-  pSnap.forEach(doc => { S.polls[doc.id] = doc.data(); });
-
-  // Load config/settings
-  const cfgDoc = await db.collection('config').doc('global').get();
-  if (cfgDoc.exists) S.settings = { ...S.settings, ...cfgDoc.data() };
+  try{const s=await db.collection('batches').get();s.forEach(d=>{S.batches[d.id]={id:d.id,...d.data()};});}catch(e){console.warn('batches:',e.code);}
+  try{const s=await db.collection('tasks').get();s.forEach(d=>{S.tasks[d.id]=d.data();});}catch(e){console.warn('tasks:',e.code);}
+  try{const s=await db.collection('themes').get();s.forEach(d=>{S.themes[d.id]=d.data();});}catch(e){console.warn('themes:',e.code);}
+  try{const s=await db.collection('quizzes').get();s.forEach(d=>{S.quizzes[d.id]=d.data();});}catch(e){console.warn('quizzes:',e.code);}
+  try{const s=await db.collection('polls').get();s.forEach(d=>{S.polls[d.id]=d.data();});}catch(e){console.warn('polls:',e.code);}
+  try{const c=await db.collection('config').doc('global').get();if(c.exists)S.settings={...S.settings,...c.data()};}catch(e){console.warn('config:',e.code);}
 }
 
 async function loadAdminData() {
-  await loadCampaignData();
-  // Load institutions for dropdown
+  try { await loadCampaignData(); } catch(e) { console.warn('loadCampaignData:', e.code||e.message); }
   try {
-    const instSnap = await db.collection('institutions').orderBy('name','asc').get();
+    const instSnap = await db.collection('institutions').get();
     S._institutions = [];
     instSnap.forEach(doc => S._institutions.push({ id: doc.id, ...doc.data() }));
+    S._institutions.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
     populateInstDropdown();
-  } catch(e) { console.warn('Institutions load error:', e.code); }
-  // Load participants once for initial render
-  const partSnap = await db.collection('participants').get();
-  S.participants = [];
-  partSnap.forEach(doc => S.participants.push({ id: doc.id, ...doc.data() }));
+  } catch(e) { console.warn('Institutions:', e.code||e.message); }
+  try {
+    const partSnap = await db.collection('participants').get();
+    S.participants = [];
+    partSnap.forEach(doc => S.participants.push({ id: doc.id, ...doc.data() }));
+  } catch(e) { console.warn('Participants:', e.code||e.message); S.participants=[]; }
 
   // Live listener — keeps admin participant list in sync as new people register
   if (!S._partUnsub) {
@@ -1722,6 +1715,18 @@ function showSignup(role) {
     authDesc.textContent  = 'Start your mindfulness journey';
     // Populate from live cache (updated by onSnapshot in real time)
     populateBatchDropdown();
+    // Load institutions for participant dropdown if not yet cached
+    if (!S._institutions || !S._institutions.length) {
+      db.collection('institutions').orderBy('name','asc').get().then(snap => {
+        S._institutions = [];
+        snap.forEach(doc => S._institutions.push({ id: doc.id, ...doc.data() }));
+        populateParticipantInstDropdown();
+      }).catch(() => {}); // silent fail -- free-text shown as fallback
+    } else {
+      populateParticipantInstDropdown();
+    }
+    // Clear form for fresh signup
+    ['p-name','p-mobile','p-pass'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
     // If cache is empty, trigger a fresh fetch (handles first load race condition)
     if (Object.keys(S.batches).length === 0) {
       const sel = document.getElementById('p-batch');
@@ -1739,6 +1744,8 @@ function showSignup(role) {
     document.getElementById('form-admin').style.display = 'block';
     authTitle.textContent = 'Admin Login';
     authDesc.textContent  = 'Manage the Yes! I Am Mindful campaign';
+    // Clear stale credentials
+    ['a-email','a-pass'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
   }
 }
 
@@ -1749,6 +1756,8 @@ function showPLogin() {
   document.getElementById('form-plogin').style.display  = 'block';
   document.getElementById('auth-title').textContent = 'Welcome Back';
   document.getElementById('auth-desc').textContent  = 'Sign in to your account';
+  // Clear any stale email/password left from previous attempt
+  ['pl-email','pl-pass'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
 }
 function showForgotPassword() {
   ['form-psignup','form-plogin','form-admin','form-forgot','form-admin-forgot'].forEach(id => {
@@ -2075,7 +2084,11 @@ async function registerParticipant() {
   const name    = _v('p-name');
   const email   = _v('p-email');
   const mobile  = _v('p-mobile');
-  const inst    = _v('p-inst');
+  // Read institution from dropdown (preferred) or free-text fallback
+  const instSel = document.getElementById('p-inst-sel');
+  const instInp = document.getElementById('p-inst');
+  const inst    = (instSel && instSel.style.display!=='none' && instSel.value && instSel.value!=='__other__')
+    ? instSel.value : (instInp ? instInp.value.trim() : '');
   const batchId = _v('p-batch');
   const pass    = _v('p-pass');
 
@@ -2628,30 +2641,27 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 // ─────────────────────────────────────────────────────────────
 // ADMIN DASHBOARD
 // ─────────────────────────────────────────────────────────────
-async function loadAdminDash() {
-  // Stats
-  const pCount = S.participants.length;
-  const bCount = Object.keys(S.batches).length;
-  const totalDone = S.participants.reduce((s, p) => s + (p.tasksCompleted || 0), 0);
-  const today = new Date(); today.setHours(0,0,0,0);
-  const activeToday = S.participants.filter(p => p.lastActive && (p.lastActive.toDate ? p.lastActive.toDate() : new Date(p.lastActive)) >= today).length;
-
-  document.getElementById('s-participants').textContent = pCount;
-  document.getElementById('s-batches').textContent      = bCount;
-  document.getElementById('s-done').textContent         = totalDone;
-  document.getElementById('s-active').textContent       = activeToday;
-
-  // Settings
-  const cfgDoc = await db.collection('config').doc('global').get();
-  if (cfgDoc.exists) {
-    const cfg = cfgDoc.data();
-    document.getElementById('pts-c').value = cfg.pointsComplete || 10;
-    document.getElementById('pts-q').value = cfg.pointsQuiz || 5;
-    document.getElementById('pts-p').value = cfg.pointsPoll || 3;
-    document.getElementById('pts-s').value = cfg.pointsStreak || 2;
-  }
-
-  renderBatches(); renderParticipants(); renderThemesPreview(); renderTaskList(); renderAdminLB();
+function loadAdminDash() {
+  const set  = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  const setV = (id,v) => { const e=document.getElementById(id); if(e) e.value=v; };
+  set('s-participants', S.participants.length);
+  set('s-batches',      Object.keys(S.batches).length);
+  set('s-done',         S.participants.reduce((s,p)=>s+(p.tasksCompleted||0),0));
+  const today=new Date(); today.setHours(0,0,0,0);
+  set('s-active', S.participants.filter(p=>{
+    if(!p.lastActive)return false;
+    const d=p.lastActive.toDate?p.lastActive.toDate():new Date(p.lastActive);
+    return d>=today;
+  }).length);
+  setV('pts-c', S.settings.pC||S.settings.pointsComplete||10);
+  setV('pts-q', S.settings.pQ||S.settings.pointsQuiz||5);
+  setV('pts-p', S.settings.pP||S.settings.pointsPoll||3);
+  setV('pts-s', S.settings.pS||S.settings.pointsStreak||2);
+  try{renderBatches();}catch(e){console.warn('renderBatches:',e.message);}
+  try{renderParticipants();}catch(e){console.warn('renderParticipants:',e.message);}
+  try{renderThemesPreview();}catch(e){console.warn('renderThemesPreview:',e.message);}
+  try{renderTaskList();}catch(e){console.warn('renderTaskList:',e.message);}
+  try{renderAdminLB();}catch(e){console.warn('renderAdminLB:',e.message);}
 }
 
 function showPanel(id, btn) {
@@ -2684,7 +2694,8 @@ function showPanel(id, btn) {
 // ─────────────────────────────────────────────────────────────
 // ADMIN — BATCHES
 // ─────────────────────────────────────────────────────────────
-var selBatchId = null;
+var
+ selBatchId = null;
 function renderBatches() {
   const allBatches = Object.values(S.batches);
   if (!allBatches.length) {
@@ -2795,7 +2806,7 @@ async function resetBatch() {
   bulk.update(db.collection('batches').doc(selBatchId), { activeWeek:1, activeTask:1 });
   await bulk.commit();
   S.batches[selBatchId].activeWeek = 1; S.batches[selBatchId].activeTask = 1;
-  await loadAdminData(); loadAdminDash();
+  try{await loadAdminData();}catch(e){} loadAdminDash();
   toast('🔄 Batch reset complete');
 }
 
@@ -3227,6 +3238,33 @@ function exportCSV() {
 // ─────────────────────────────────────────────────────────────
 // ADMIN — INSTITUTIONS
 // ─────────────────────────────────────────────────────────────
+// Participant signup institution helpers
+function populateParticipantInstDropdown() {
+  const sel   = document.getElementById('p-inst-sel');
+  const input = document.getElementById('p-inst');
+  if (!sel || !input) return;
+  const insts = S._institutions || [];
+  if (!insts.length) {
+    sel.style.display = 'none'; input.style.display = '';
+    return;
+  }
+  sel.style.display = ''; input.style.display = 'none';
+  sel.innerHTML = '<option value="">Choose your institution…</option>' +
+    insts.map(i => '<option value="'+i.name+'">' + i.name + (i.city?' ('+i.city+')':'') + '</option>').join('') +
+    '<option value="__other__">Other / Not listed</option>';
+}
+function syncInstFromSelect() {
+  const sel = document.getElementById('p-inst-sel');
+  const inp = document.getElementById('p-inst');
+  if (!sel || !inp) return;
+  if (sel.value === '__other__') {
+    inp.style.display = ''; inp.value = ''; inp.focus();
+    inp.placeholder = 'Type your institution name';
+  } else {
+    inp.style.display = 'none'; inp.value = sel.value;
+  }
+}
+
 async function saveInstitution() {
   const name    = _v('inst-name');
   const city    = _v('inst-city');
