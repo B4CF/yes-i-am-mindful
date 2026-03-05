@@ -978,12 +978,11 @@ body {
               <div class="form-group"><label class="form-label">Start Date</label><input type="date" class="form-input" id="b-start"></div>
             </div>
             <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Institution</label>
-                <select class="form-select" id="b-inst">
-                  <option value="">— Select Institution —</option>
-                </select>
-                <div style="font-size:11px;color:var(--muted);margin-top:4px;">Add institutions in the <a onclick="showPanel('institutions',null)" style="color:var(--navy);cursor:pointer;text-decoration:underline;">Institutions panel</a></div>
+              <div class="form-group" style="flex:2;">
+                <label class="form-label">Institutions <span style="font-weight:400;color:var(--muted);">(tick all that apply)</span></label>
+                <div id="b-inst-box" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--off-white);padding:10px 12px;min-height:46px;max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;">
+                  <span style="font-size:12px;color:var(--muted);">No institutions yet. <a onclick="showPanel('institutions',null)" style="color:var(--navy-light);cursor:pointer;text-decoration:underline;">Add one first ↗</a></span>
+                </div>
               </div>
               <div class="form-group"><label class="form-label">Max Participants</label><input type="number" class="form-input" id="b-max" placeholder="100"></div>
             </div>
@@ -1245,9 +1244,17 @@ body {
         <div id="panel-leaderboard" class="a-panel">
           <div class="panel-hd"><h2>Leaderboard</h2><p>Live all-batch rankings from Firebase</p></div>
           <div class="a-card">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
               <h3 style="margin-bottom:0">All-Batch Rankings</h3>
-              <button class="btn-outline-admin" onclick="exportCSV()">⬇ Export</button>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <select id="admin-lb-inst-filter" class="form-select" onchange="renderAdminLB()" style="font-size:13px;padding:6px 10px;min-width:180px;">
+                  <option value="">All Institutions</option>
+                </select>
+                <select id="admin-lb-batch-filter" class="form-select" onchange="renderAdminLB()" style="font-size:13px;padding:6px 10px;min-width:160px;">
+                  <option value="">All Batches</option>
+                </select>
+                <button class="btn-outline-admin" onclick="exportCSV()">⬇ Export</button>
+              </div>
             </div>
             <div id="admin-lb"></div>
           </div>
@@ -1655,12 +1662,12 @@ async function loadAdminData() {
       // Remove deleted batches
       const ids = new Set(snap.docs.map(d => d.id));
       Object.keys(S.batches).forEach(k => { if (!ids.has(k)) delete S.batches[k]; });
-      const panel = document.getElementById('panel-batches');
-      if (panel && panel.classList.contains('active')) renderBatches();
-      // Keep batch dropdown in signup up to date
+      // Always re-render -- panel.active guard was causing new batches to vanish
+      renderBatches();
+      const sbEl2 = document.getElementById('s-batches');
+      if (sbEl2) sbEl2.textContent = Object.keys(S.batches).length;
       populateBatchDropdown();
-      // Refresh institution dropdown in batch form
-      if (typeof populateInstDropdown === 'function') populateInstDropdown();
+      populateInstCheckboxes();
     }, err => console.warn('Batch admin sync error:', err.code));
   }
 }
@@ -2655,14 +2662,13 @@ function showPanel(id, btn) {
   else { const el = document.querySelector(`.a-nav-btn[onclick*="'${id}'"]`); if (el) el.classList.add('active'); }
   if (id === 'survey-config') refreshSurveyList();
   if (id === 'institutions') loadInstitutions();
-  // Reload batches fresh from Firestore whenever batch panel is opened
+  if (id === 'leaderboard') renderAdminLB();
+  // Render from S.batches (kept live by onSnapshot). NO .get() here -- it races with createBatch.
   if (id === 'batches') {
-    db.collection('batches').get().then(snap => {
-      snap.forEach(doc => { S.batches[doc.id] = { id: doc.id, ...doc.data() }; });
-      renderBatches();
-      document.getElementById('s-batches').textContent = Object.keys(S.batches).length;
-      populateInstDropdown();
-    }).catch(e => console.warn('Batches reload error:', e.code));
+    renderBatches();
+    populateInstCheckboxes();
+    const sbEl = document.getElementById('s-batches');
+    if (sbEl) sbEl.textContent = Object.keys(S.batches).length;
   }
   // Always reload fresh participant data when switching to the participants tab
   if (id === 'participants') {
@@ -2678,14 +2684,26 @@ function showPanel(id, btn) {
 // ─────────────────────────────────────────────────────────────
 // ADMIN — BATCHES
 // ─────────────────────────────────────────────────────────────
-let selBatchId = null;
+var selBatchId = null;
 function renderBatches() {
-  document.getElementById('batches-grid').innerHTML = Object.values(S.batches).map(b => `
+  const allBatches = Object.values(S.batches);
+  if (!allBatches.length) {
+    document.getElementById('batches-grid').innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">No batches yet. Create one above.</p>';
+    return;
+  }
+  document.getElementById('batches-grid').innerHTML = allBatches.map(b => {
+    const instArr   = Array.isArray(b.institutions) && b.institutions.length
+      ? b.institutions
+      : (b.institution ? b.institution.split(',').map(s=>s.trim()).filter(Boolean) : []);
+    const instLabel = instArr.length ? instArr.join(' · ') : '—';
+    return `
     <div class="batch-card ${b.id===selBatchId?'selected':''}" onclick="selectBatch('${b.id}')">
-      <h4>${b.name}</h4><p>📍 ${b.institution||''}</p>
-      <p style="font-size:11px;margin-top:4px;color:var(--muted);">📅 ${b.startDate||''} · W${b.activeWeek||1}/T${b.activeTask||1}</p>
+      <h4>${b.name}</h4>
+      <p style="font-size:12px;color:var(--muted);margin-top:3px;">🏫 ${instLabel}</p>
+      <p style="font-size:11px;margin-top:5px;color:var(--muted);">📅 ${b.startDate||''} · W${b.activeWeek||1}/T${b.activeTask||1}</p>
       <div class="b-status ${b.status||'active'}">${b.status==='active'?'● Active':'○ Draft'}</div>
-    </div>`).join('') || '<p style="color:var(--muted);font-size:14px;">No batches yet.</p>';
+    </div>`;
+  }).join('');
 }
 
 function selectBatch(id) {
@@ -2698,16 +2716,52 @@ function selectBatch(id) {
 }
 
 async function createBatch() {
-  const name = _v('b-name'), startDate = _v('b-start'), institution = _v('b-inst');
+  const name      = _v('b-name');
+  const startDate = _v('b-start');
+  if (!name)      { toast('⚠️ Batch name is required'); return; }
+  if (!startDate) { toast('⚠️ Start date is required'); return; }
   const maxParticipants = parseInt(_v('b-max')) || 100;
-  if (!name || !startDate) { toast('⚠️ Batch name and start date required'); return; }
-  const batchRef = db.collection('batches').doc();
-  const batchData = { id: batchRef.id, name, institution, startDate, maxParticipants, status:'active', activeWeek:1, activeTask:1, createdAt: FieldValue.serverTimestamp() };
-  await batchRef.set(batchData);
-  S.batches[batchRef.id] = batchData;
-  renderBatches();
-  ['b-name','b-start','b-inst','b-max'].forEach(id => document.getElementById(id).value = '');
-  toast('✅ Batch "' + name + '" created!');
+
+  // Gather checked institution checkboxes (multi-select)
+  const selectedInsts  = Array.from(document.querySelectorAll('.b-inst-cb:checked')).map(cb => cb.value);
+  const institutionStr = selectedInsts.join(', ');
+
+  const btn = document.querySelector('[onclick="createBatch()"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
+
+  try {
+    const batchRef  = db.collection('batches').doc();
+    const batchData = {
+      id:           batchRef.id,
+      name,
+      institution:  institutionStr,
+      institutions: selectedInsts,
+      startDate,
+      maxParticipants,
+      status:      'active',
+      activeWeek:   1,
+      activeTask:   1,
+      createdAt:    FieldValue.serverTimestamp(),
+    };
+
+    await batchRef.set(batchData);
+
+    // Update local cache immediately -- do NOT wait for onSnapshot
+    S.batches[batchRef.id] = { ...batchData, createdAt: new Date() };
+    renderBatches();
+    const sbEl3 = document.getElementById('s-batches');
+    if (sbEl3) sbEl3.textContent = Object.keys(S.batches).length;
+
+    // Reset form
+    ['b-name','b-start','b-max'].forEach(fid => { const el = document.getElementById(fid); if (el) el.value = ''; });
+    document.querySelectorAll('.b-inst-cb').forEach(cb => { cb.checked = false; });
+    toast('✅ Batch "' + name + '" created!');
+  } catch (e) {
+    console.error('createBatch error:', e);
+    toast('❌ Could not save batch: ' + (e.code || e.message));
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Create Batch'; }
+  }
 }
 
 async function updateBatch() {
@@ -2916,18 +2970,52 @@ async function savePoll() {
 // ADMIN — LEADERBOARD
 // ─────────────────────────────────────────────────────────────
 function renderAdminLB() {
-  const sorted = [...S.participants].sort((a,b) => (b.points||0)-(a.points||0));
-  const emoji  = ['🥇','🥈','🥉'];
-  document.getElementById('admin-lb').innerHTML = `
-    <table class="p-table"><thead><tr><th>#</th><th>Name</th><th>Batch</th><th>Points</th><th>Tasks</th><th>Streak</th></tr></thead>
-    <tbody>${sorted.map((p,i) => `<tr>
-      <td>${emoji[i]||i+1}</td>
-      <td><strong>${p.name||''}</strong></td>
-      <td>${(S.batches[p.batchId]||{}).name||'—'}</td>
-      <td><strong style="color:var(--navy)">${p.points||0}</strong></td>
-      <td>${p.tasksCompleted||0}/40</td>
-      <td>🔥 ${p.streak||0}</td>
-    </tr>`).join('')}</tbody></table>`;
+  // Populate filter dropdowns
+  const instSel  = document.getElementById('admin-lb-inst-filter');
+  const batchSel = document.getElementById('admin-lb-batch-filter');
+  if (instSel) {
+    const curInst = instSel.value;
+    instSel.innerHTML = '<option value="">All Institutions</option>' +
+      (S._institutions||[]).map(i => '<option value="'+i.name+'"'+(curInst===i.name?' selected':'')+'>'+i.name+'</option>').join('');
+    instSel.value = curInst;
+  }
+  if (batchSel) {
+    const curBatch = batchSel.value;
+    batchSel.innerHTML = '<option value="">All Batches</option>' +
+      Object.values(S.batches).map(b => '<option value="'+b.id+'"'+(curBatch===b.id?' selected':'')+'>'+b.name+'</option>').join('');
+    batchSel.value = curBatch;
+  }
+  const filterInst  = (instSel  && instSel.value)  || '';
+  const filterBatch = (batchSel && batchSel.value) || '';
+
+  let list = [...S.participants];
+  if (filterBatch) list = list.filter(p => p.batchId === filterBatch);
+  if (filterInst)  list = list.filter(p => {
+    const pInst      = (p.institution||'').trim();
+    const bInsts     = (S.batches[p.batchId]||{}).institutions || [];
+    return pInst === filterInst || bInsts.includes(filterInst);
+  });
+  list.sort((a,b) => (b.points||0)-(a.points||0));
+
+  const emoji = ['🥇','🥈','🥉'];
+  const rows  = list.length ? list.map((p,i) => {
+    const batch    = S.batches[p.batchId] || {};
+    const instDisp = p.institution || (batch.institutions||[]).join(', ') || batch.institution || '—';
+    return '<tr>'+
+      '<td>'+(emoji[i]||i+1)+'</td>'+
+      '<td><strong>'+(p.name||'')+'</strong></td>'+
+      '<td style="font-size:12px;color:var(--muted);">'+instDisp+'</td>'+
+      '<td>'+(batch.name||'—')+'</td>'+
+      '<td><strong style="color:var(--navy)">'+(p.points||0)+'</strong></td>'+
+      '<td>'+(p.tasksCompleted||0)+'/40</td>'+
+      '<td>🔥 '+(p.streak||0)+'</td>'+
+      '</tr>';
+  }).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">No participants found</td></tr>';
+
+  document.getElementById('admin-lb').innerHTML =
+    '<table class="p-table"><thead><tr>'+
+    '<th>#</th><th>Name</th><th>Institution</th><th>Batch</th><th>Points</th><th>Tasks</th><th>Streak</th>'+
+    '</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -3201,13 +3289,23 @@ function renderInstitutions() {
     </table>`;
 }
 
-function populateInstDropdown() {
-  const sel = document.getElementById('b-inst');
-  if (!sel) return;
+function populateInstDropdown() { populateInstCheckboxes(); } // kept for compatibility
+
+function populateInstCheckboxes() {
+  const box = document.getElementById('b-inst-box');
+  if (!box) return;
   const insts = S._institutions || [];
-  const current = sel.value;
-  sel.innerHTML = '<option value="">— Select Institution —</option>' +
-    insts.map(i => `<option value="${i.name}" ${current===i.name?'selected':''}>${i.name}${i.city?' ('+i.city+')':''}</option>`).join('');
+  if (!insts.length) {
+    box.innerHTML = '<span style="font-size:12px;color:var(--muted);">No institutions yet. <a onclick="showPanel(\'institutions\',null)" style="color:var(--navy-light);cursor:pointer;text-decoration:underline;">Add one first ↗</a></span>';
+    return;
+  }
+  const checked = new Set(Array.from(box.querySelectorAll('.b-inst-cb:checked')).map(cb => cb.value));
+  box.innerHTML = insts.map(inst =>
+    '<label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:2px 0;">'+
+    '<input type="checkbox" class="b-inst-cb" value="'+inst.name+'" '+(checked.has(inst.name)?'checked':'')+' style="accent-color:var(--navy);width:15px;height:15px;flex-shrink:0;">'+
+    '<span><strong>'+inst.name+'</strong>'+(inst.city?' <span style="color:var(--muted);font-size:11px;">('+inst.city+')</span>':'')+' </span>'+
+    '</label>'
+  ).join('');
 }
 
 // ─────────────────────────────────────────────────────────────
