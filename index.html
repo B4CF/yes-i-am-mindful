@@ -499,7 +499,7 @@ body {
 .batch-card p { font-size:12px; color:var(--muted); margin-top:3px; }
 .b-status { display:inline-block; margin-top:10px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
 .b-status.active { background:#D1FAE5; color:#065F46; }
-.b-status.draft { background:var(--slate); color:var(--muted); }
+.b-status.close { background:var(--slate); color:var(--muted); }
 .task-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; background:var(--white); margin-bottom:8px; transition:all 0.15s; }
 .task-row:hover { box-shadow:var(--shadow); }
 .task-num-badge { width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--navy),var(--navy-light)); color:var(--white); font-family:'Oswald',sans-serif; font-size:14px; font-weight:700; display:flex;align-items:center;justify-content:center; flex-shrink:0; }
@@ -1084,7 +1084,7 @@ body {
             <div class="form-row" style="margin-bottom:8px;">
               <div class="form-group"><label class="form-label">Batch Name</label><input type="text" class="form-input" id="bc-edit-name" placeholder="Batch name"></div>
               <div class="form-group"><label class="form-label">Start Date</label><input type="date" class="form-input" id="bc-edit-date"></div>
-              <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="bc-edit-status"><option value="active">Active</option><option value="draft">Draft</option></select></div>
+              <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="bc-edit-status"><option value="active">Active</option><option value="close">Close</option></select></div>
             </div>
             <div class="form-row" style="margin-bottom:16px;">
               <div class="form-group"><label class="form-label">Active Week</label>
@@ -2973,7 +2973,7 @@ function renderBatches() {
       <h4>${b.name}</h4>
       <p style="font-size:12px;color:var(--muted);margin-top:3px;">🏫 ${instLabel}</p>
       <p style="font-size:11px;margin-top:5px;color:var(--muted);">📅 ${b.startDate||''} · W${b.activeWeek||1}/T${b.activeTask||1}</p>
-      <div class="b-status ${b.status||'active'}">${b.status==='active'?'● Active':'○ Draft'}</div>
+      <div class="b-status ${b.status||'active'}">${b.status==='active'?'● Active':'○ Close'}</div>
     </div>`;
   }).join('');
 }
